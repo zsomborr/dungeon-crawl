@@ -9,14 +9,7 @@ public abstract class Actor implements Drawable {
     protected Cell cell;
     protected int health;
 
-    public void move(int dx, int dy) {
-        Cell nextCell = cell.getNeighbor(dx, dy);
-        if (nextCell.getType() != CellType.WALL && nextCell.getActor() == null) {
-            cell.setActor(null);
-            nextCell.setActor(this);
-            cell = nextCell;
-        }
-    }
+    public void move(int dx, int dy){};
 
     public int getHealth() {
         return health;

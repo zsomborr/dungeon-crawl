@@ -82,6 +82,7 @@ public class Main extends Application {
         switch (keyEvent.getCode()) {
             case UP:
                 map.getPlayer().move(0, -1);
+                enablePickUp();
                 refresh();
                 break;
             case DOWN:
@@ -99,6 +100,14 @@ public class Main extends Application {
                 enablePickUp();
                 refresh();
                 break;
+            default:
+                break;
+        }
+    }
+
+    private void enablePickUp() {
+        if (map.getPlayer().isOnItem()) {
+            button.setDisable(false);
         }
     }
 

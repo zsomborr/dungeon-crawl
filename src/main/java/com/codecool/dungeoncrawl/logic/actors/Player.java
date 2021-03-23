@@ -1,8 +1,11 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 
 public class Player extends Actor {
+    private boolean onItem = false;
+
     public Player(Cell cell) {
         super.cell = cell;
         super.cell.setActor(this);
