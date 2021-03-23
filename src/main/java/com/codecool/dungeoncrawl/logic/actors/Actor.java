@@ -6,6 +6,7 @@ import com.codecool.dungeoncrawl.logic.Drawable;
 public abstract class Actor implements Drawable {
     protected Cell cell;
     protected int health;
+    protected int strength;
 
     public void move(int dx, int dy){};
 

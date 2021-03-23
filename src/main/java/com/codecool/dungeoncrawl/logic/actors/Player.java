@@ -21,12 +21,31 @@ public class Player extends Actor {
         super.cell.setActor(this);
     }
 
+    public void addToInventory() {
+        Item item = super.cell.getItem();
+        changePlayerStat(item);
+        inventory.add(item);
+        this.cell.setItem(null);
+    }
+
+    private void changePlayerStat(Item item) {
+        if (item instanceof Potion){
+            health += item.getStat();
+        } else if (item instanceof Sword) {
+            strength += item.getStat();
+        }
+    }
+
     public String getTileName() {
         return "player";
     }
 
     public boolean isOnItem() {
         return onItem;
+    }
+
+    public List<Item> getInventory() {
+        return inventory;
     }
 
     @Override
@@ -41,6 +60,23 @@ public class Player extends Actor {
         } else if (nextCell.getActor() != null) {
             fight(nextCell);
             System.out.println(health);
+        }
+    }
+
+    private void fight(Cell nextCell) {
+        int enemyHealth = nextCell.getActor().getHealth();
+        int enemyStrength = nextCell.getActor().getStrength();
+        nextCell.getActor().setHealth(enemyHealth - strength);
+        this.setHealth(health - enemyStrength);
+        if (nextCell.getActor().getHealth() <= 0) {
+            nextCell.setActor(null);
+        }
+        System.out.println(health);
+    }
+
+    private void checkIfOnItem(Cell nextCell) {
+        if (nextCell.getItem() != null) {
+            onItem = true;
         }
     }
 }

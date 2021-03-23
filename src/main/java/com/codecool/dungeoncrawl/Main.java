@@ -49,7 +49,6 @@ public class Main extends Application {
             button.setDisable(true);
         });
 
-
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
 

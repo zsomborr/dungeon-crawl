@@ -50,6 +50,10 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             new Potion(cell);
                             break;
+                        case 'p':
+                            cell.setType(CellType.FLOOR);
+                            new Spider(cell);
+                            break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");
                     }

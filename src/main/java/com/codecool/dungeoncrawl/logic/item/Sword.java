@@ -8,6 +8,7 @@ public class Sword extends Item {
     public Sword(Cell cell) {
         this.cell = cell;
         this.cell.setItem(this);
+        stat = 5;
     }
 
     @Override
