@@ -23,6 +23,7 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
+    Button button = new Button("Pick up");
 
     public static void main(String[] args) {
         launch(args);
@@ -34,13 +35,22 @@ public class Main extends Application {
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
-//        Label label = new Label("not");
-//        ui.add(label, 0, 3);
-//        Button button = new Button("test");
-//        ui.add(button, 0, 1);
-//        button.setOnAction(value -> {
-//            label.setText("Clicked!");
-//        });
+
+        Label label = new Label("0");
+        ui.add(label, 0, 3);
+
+        ui.add(button, 0, 1);
+        button.setDisable(true);
+
+        button.setOnAction(value -> {
+            onButtonPressed(label);
+        });
+
+        button.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
+            onKeyPressed(ev);
+            button.setDisable(true);
+        });
+
 
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
@@ -59,6 +69,15 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    private void onButtonPressed(Label label) {
+        if (label.getText().equals("0")) {
+            label.setText("1");
+        } else {
+            label.setText("0");
+        }
+        button.setDisable(true);
+    }
+
     private void onKeyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case UP:
@@ -67,14 +86,17 @@ public class Main extends Application {
                 break;
             case DOWN:
                 map.getPlayer().move(0, 1);
+                enablePickUp();
                 refresh();
                 break;
             case LEFT:
                 map.getPlayer().move(-1, 0);
+                enablePickUp();
                 refresh();
                 break;
             case RIGHT:
-                map.getPlayer().move(1,0);
+                map.getPlayer().move(1, 0);
+                enablePickUp();
                 refresh();
                 break;
         }

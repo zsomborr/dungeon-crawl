@@ -3,15 +3,11 @@ package com.codecool.dungeoncrawl.logic.actors;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
+import javafx.scene.control.Button;
 
 public abstract class Actor implements Drawable {
-    private Cell cell;
-    private int health = 10;
-
-    public Actor(Cell cell) {
-        this.cell = cell;
-        this.cell.setActor(this);
-    }
+    protected Cell cell;
+    protected int health;
 
     public void move(int dx, int dy) {
         Cell nextCell = cell.getNeighbor(dx, dy);
