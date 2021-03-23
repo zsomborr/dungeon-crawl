@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -32,6 +33,14 @@ public class Main extends Application {
         GridPane ui = new GridPane();
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
+
+//        Label label = new Label("not");
+//        ui.add(label, 0, 3);
+//        Button button = new Button("test");
+//        ui.add(button, 0, 1);
+//        button.setOnAction(value -> {
+//            label.setText("Clicked!");
+//        });
 
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
