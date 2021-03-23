@@ -24,4 +24,8 @@ public abstract class Item implements Drawable {
         return cell.getY();
     }
 
+    @Override
+    public String toString() {
+        return this.getTileName();
+    }
 }

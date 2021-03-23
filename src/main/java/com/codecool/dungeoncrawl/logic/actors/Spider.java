@@ -2,17 +2,17 @@ package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 
-public class Skeleton extends Actor {
+public class Spider extends Actor {
 
-    public Skeleton(Cell cell) {
+    public Spider(Cell cell) {
         super.cell = cell;
         super.cell.setActor(this);
-        health = 10;
-        strength = 2;
+        health = 5;
+        strength = 8;
     }
 
     @Override
     public String getTileName() {
-        return "skeleton";
+        return "spider";
     }
 }

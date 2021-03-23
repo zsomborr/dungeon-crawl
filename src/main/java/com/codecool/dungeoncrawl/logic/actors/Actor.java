@@ -1,9 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
-import javafx.scene.control.Button;
 
 public abstract class Actor implements Drawable {
     protected Cell cell;
@@ -13,6 +11,14 @@ public abstract class Actor implements Drawable {
 
     public int getHealth() {
         return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getStrength() {
+        return strength;
     }
 
     public Cell getCell() {

@@ -23,6 +23,8 @@ public class Main extends Application {
             map.getHeight() * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
+    Label inventoryLabel = new Label();
+    Label strengthLabel = new Label();
     Button button = new Button("Pick up");
 
     public static void main(String[] args) {
@@ -35,15 +37,11 @@ public class Main extends Application {
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
-
-        Label label = new Label("0");
-        ui.add(label, 0, 3);
-
-        ui.add(button, 0, 1);
+        ui.add(button, 0, 3);
         button.setDisable(true);
 
         button.setOnAction(value -> {
-            onButtonPressed(label);
+            onButtonPressed();
         });
 
         button.addEventHandler(KeyEvent.KEY_PRESSED, ev -> {
@@ -54,6 +52,12 @@ public class Main extends Application {
 
         ui.add(new Label("Health: "), 0, 0);
         ui.add(healthLabel, 1, 0);
+
+        ui.add(new Label("Strength: "), 0, 1);
+        ui.add(strengthLabel, 1, 1);
+
+        ui.add(new Label("Inventory: "), 0, 2);
+        ui.add(inventoryLabel, 1, 2);
 
         BorderPane borderPane = new BorderPane();
 
@@ -69,13 +73,10 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private void onButtonPressed(Label label) {
-        if (label.getText().equals("0")) {
-            label.setText("1");
-        } else {
-            label.setText("0");
-        }
+    private void onButtonPressed() {
+        map.getPlayer().addToInventory();
         button.setDisable(true);
+        refresh();
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {
@@ -127,5 +128,7 @@ public class Main extends Application {
             }
         }
         healthLabel.setText("" + map.getPlayer().getHealth());
+        inventoryLabel.setText("" + map.getPlayer().getInventory());
+        strengthLabel.setText("" + map.getPlayer().getStrength());
     }
 }

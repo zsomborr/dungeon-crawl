@@ -2,11 +2,21 @@ package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
+import com.codecool.dungeoncrawl.logic.item.Item;
+import com.codecool.dungeoncrawl.logic.item.Potion;
+import com.codecool.dungeoncrawl.logic.item.Sword;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player extends Actor {
     private boolean onItem = false;
+    private List<Item> inventory;
 
     public Player(Cell cell) {
+        health = 20;
+        strength = 5;
+        inventory = new ArrayList<>();
         super.cell = cell;
         super.cell.setActor(this);
     }
@@ -24,12 +34,13 @@ public class Player extends Actor {
         onItem = false;
         Cell nextCell = cell.getNeighbor(dx, dy);
         if (nextCell.getType() != CellType.WALL && nextCell.getActor() == null) {
-            if (nextCell.getItem() != null) {
-                onItem = true;
-            }
+            checkIfOnItem(nextCell);
             cell.setActor(null);
             nextCell.setActor(this);
             cell = nextCell;
+        } else if (nextCell.getActor() != null) {
+            fight(nextCell);
+            System.out.println(health);
         }
     }
 }
