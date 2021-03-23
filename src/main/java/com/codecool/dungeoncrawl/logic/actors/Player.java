@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl.logic.actors;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.item.Item;
+import com.codecool.dungeoncrawl.logic.item.Key;
 import com.codecool.dungeoncrawl.logic.item.Potion;
 import com.codecool.dungeoncrawl.logic.item.Sword;
 
@@ -52,7 +53,8 @@ public class Player extends Actor {
     public void move(int dx, int dy) {
         onItem = false;
         Cell nextCell = cell.getNeighbor(dx, dy);
-        if (nextCell.getType() != CellType.WALL && nextCell.getActor() == null) {
+        if (nextCell.getType() != CellType.WALL && nextCell.getType() != CellType.CLOSED_DOOR
+                && nextCell.getActor() == null) {
             checkIfOnItem(nextCell);
             cell.setActor(null);
             nextCell.setActor(this);

@@ -135,4 +135,10 @@ public class Main extends Application {
         inventoryLabel.setText("" + map.getPlayer().getInventory());
         strengthLabel.setText("" + map.getPlayer().getStrength());
     }
+
+    private void moveALlMonsters() {
+        for (Actor monster : map.getMonsters()) {
+            monster.move();
+        }
+    }
 }
