@@ -1,6 +1,11 @@
 package com.codecool.dungeoncrawl.logic;
 
+import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class GameMap {
     private int width;
@@ -8,14 +13,37 @@ public class GameMap {
     private Cell[][] cells;
 
     private Player player;
+    private List<Actor> monsters;
 
     public GameMap(int width, int height, CellType defaultCellType) {
+        monsters = new ArrayList<>();
         this.width = width;
         this.height = height;
         cells = new Cell[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 cells[x][y] = new Cell(this, x, y, defaultCellType);
+            }
+        }
+    }
+
+    public void addMonster(Actor monster) {
+        monsters.add(monster);
+    }
+
+    public List<Actor> getMonsters() {
+        return monsters;
+    }
+
+    public Cell getRandomEmptyCell() {
+        Random random = new Random();
+        while(true) {
+            int x = random.nextInt(width);
+            int y = random.nextInt(height);
+            Cell randomCell = cells[x][y];
+            if (randomCell.getType() == CellType.FLOOR
+                    || randomCell.getType() == CellType.WALL) {
+                return randomCell;
             }
         }
     }

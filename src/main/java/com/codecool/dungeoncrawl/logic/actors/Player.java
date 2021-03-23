@@ -60,6 +60,16 @@ public class Player extends Actor {
         } else if (nextCell.getActor() != null) {
             fight(nextCell);
             System.out.println(health);
+        } else if (nextCell.getType() == CellType.CLOSED_DOOR) {
+            tryOpenDoor(nextCell);
+        }
+    }
+
+    private void tryOpenDoor(Cell nextCell) {
+        for (Item item : inventory) {
+            if (item instanceof Key){
+                nextCell.setType(CellType.OPEN_DOOR);
+            }
         }
     }
 

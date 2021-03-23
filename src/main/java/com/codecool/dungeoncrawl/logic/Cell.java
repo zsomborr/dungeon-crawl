@@ -41,8 +41,19 @@ public class Cell implements Drawable {
         this.item = item;
     }
 
+    public GameMap getGameMap() {
+        return gameMap;
+    }
+
     public Cell getNeighbor(int dx, int dy) {
-        return gameMap.getCell(x + dx, y + dy);
+        if (x + dx < 0
+                || y + dy < 0
+                || x + dx >= gameMap.getWidth()
+                || y + dy >= gameMap.getHeight()) {
+            return gameMap.getCell(x, y);
+        } else {
+            return gameMap.getCell(x + dx, y + dy);
+        }
     }
 
     @Override

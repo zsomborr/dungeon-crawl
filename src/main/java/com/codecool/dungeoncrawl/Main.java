@@ -3,6 +3,7 @@ package com.codecool.dungeoncrawl;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
+import com.codecool.dungeoncrawl.logic.actors.Actor;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -82,21 +83,25 @@ public class Main extends Application {
         switch (keyEvent.getCode()) {
             case UP:
                 map.getPlayer().move(0, -1);
+                moveALlMonsters();
                 enablePickUp();
                 refresh();
                 break;
             case DOWN:
                 map.getPlayer().move(0, 1);
+                moveALlMonsters();
                 enablePickUp();
                 refresh();
                 break;
             case LEFT:
                 map.getPlayer().move(-1, 0);
+                moveALlMonsters();
                 enablePickUp();
                 refresh();
                 break;
             case RIGHT:
                 map.getPlayer().move(1, 0);
+                moveALlMonsters();
                 enablePickUp();
                 refresh();
                 break;

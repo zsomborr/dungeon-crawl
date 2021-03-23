@@ -1,5 +1,6 @@
 package com.codecool.dungeoncrawl.logic;
 
+import com.codecool.dungeoncrawl.logic.actors.Ghost;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import com.codecool.dungeoncrawl.logic.actors.Skeleton;
 import com.codecool.dungeoncrawl.logic.actors.Spider;
@@ -49,6 +50,14 @@ public class MapLoader {
                         case 'O':
                             cell.setType(CellType.FLOOR);
                             new Potion(cell);
+                            break;
+                        case 'g':
+                            cell.setType(CellType.FLOOR);
+                            map.addMonster(new Ghost(cell));
+                            break;
+                        case 'p':
+                            cell.setType(CellType.FLOOR);
+                            map.addMonster(new Spider(cell));
                             break;
                         case 'p':
                             cell.setType(CellType.FLOOR);
