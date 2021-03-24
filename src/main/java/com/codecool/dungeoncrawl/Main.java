@@ -19,13 +19,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 public class Main extends Application {
-    GameMap map = MapLoader.loadMap("/map.txt");
-//    Canvas canvas = new Canvas(
-//            map.getWidth() * Tiles.TILE_WIDTH,
-//            map.getHeight() * Tiles.TILE_WIDTH);
-    Canvas canvas = new Canvas((map.getPlayer().getX() + 10) * Tiles.TILE_WIDTH,
-        (map.getPlayer().getY() + 10) * Tiles.TILE_WIDTH);
+    int currentMapIndex;
+    int canvasWidth = 23;
+    ArrayList<GameMap> maps = new ArrayList<>();
+    GameMap currentMap;
+    Canvas canvas = new Canvas(
+            canvasWidth * Tiles.TILE_WIDTH,
+            canvasWidth * Tiles.TILE_WIDTH);
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     Label inventoryLabel = new Label();
@@ -42,6 +45,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        createMaps();
+        currentMap = maps.get(currentMapIndex);
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
 
@@ -74,7 +79,7 @@ public class Main extends Application {
 //        });
 
         nameButton.setOnAction(value -> {
-            map.getPlayer().setName(nameTextField.getText());
+            currentMap.getPlayer().setName(nameTextField.getText());
             refresh();
             nameTextField.setDisable(true);
             nameButton.setDisable(true);
@@ -110,7 +115,7 @@ public class Main extends Application {
     }
 
     private void onButtonPressed() {
-        map.getPlayer().addToInventory();
+        currentMap.getPlayer().addToInventory();
         pickupButton.setDisable(true);
         refresh();
     }
@@ -118,25 +123,25 @@ public class Main extends Application {
     private void onKeyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case UP:
-                map.getPlayer().move(0, -1);
+                currentMap.getPlayer().move(0, -1);
                 moveALlMonsters();
                 enablePickUp();
                 refresh();
                 break;
             case DOWN:
-                map.getPlayer().move(0, 1);
+                currentMap.getPlayer().move(0, 1);
                 moveALlMonsters();
                 enablePickUp();
                 refresh();
                 break;
             case LEFT:
-                map.getPlayer().move(-1, 0);
+                currentMap.getPlayer().move(-1, 0);
                 moveALlMonsters();
                 enablePickUp();
                 refresh();
                 break;
             case RIGHT:
-                map.getPlayer().move(1, 0);
+                currentMap.getPlayer().move(1, 0);
                 moveALlMonsters();
                 enablePickUp();
                 refresh();
@@ -147,45 +152,36 @@ public class Main extends Application {
     }
 
     private void enablePickUp() {
-        if (map.getPlayer().isOnItem()) {
+        if (currentMap.getPlayer().isOnItem()) {
             pickupButton.setDisable(false);
         }
     }
 
     private void refresh() {
-
-        canvas.setWidth((map.getPlayer().getX() + 10) * Tiles.TILE_WIDTH);
-        canvas.setHeight((map.getPlayer().getY() + 10) * Tiles.TILE_WIDTH);
-
-        if (map.getPlayer().isOnStairs()){
-            Player currentPlayer = map.getPlayer();
-            map = MapLoader.loadMap("/map2.txt");
-            Cell currentCell = map.getPlayer().getCell();
-            map.setPlayer(currentPlayer);
-            map.getPlayer().setCell(currentCell);
-        }
-        context.setFill(Color.BLACK);
+        changeCurrentMap();
+        Color background = Color.rgb(71,45,60);
+        context.setFill(background);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
-                Cell cell = map.getCell(x, y);
+        for (int x = 0; x < currentMap.getWidth(); x++) {
+            for (int y = 0; y < currentMap.getHeight(); y++) {
+                int centeredX = x - currentMap.getPlayer().getX() + canvasWidth/2;
+                int centeredY = y - currentMap.getPlayer().getY() + canvasWidth/2;
+                Cell cell = currentMap.getCell(x, y);
+
                 if (cell.getActor() != null) {
-                    Tiles.drawTile(context, cell.getActor(), x, y);
+                    Tiles.drawTile(context, cell.getActor(), centeredX, centeredY);
                 } else if (cell.getItem() != null) {
-                    Tiles.drawTile(context, cell.getItem(), x, y);
+                    Tiles.drawTile(context, cell.getItem(), centeredX, centeredY);
                 } else {
-                    Tiles.drawTile(context, cell, x, y);
+                    Tiles.drawTile(context, cell, centeredX, centeredY);
                 }
             }
         }
-        healthLabel.setText("" + map.getPlayer().getHealth());
-        inventoryLabel.setText("" + map.getPlayer().getInventory());
-        strengthLabel.setText("" + map.getPlayer().getStrength());
-        nameLabel.setText("" + map.getPlayer().getName());
+        changeLabels();
     }
 
     private void moveALlMonsters() {
-        for (Actor monster : map.getMonsters()) {
+        for (Actor monster : currentMap.getMonsters()) {
             monster.move();
         }
     }

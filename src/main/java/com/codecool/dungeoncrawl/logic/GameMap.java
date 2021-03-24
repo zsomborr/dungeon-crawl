@@ -52,6 +52,28 @@ public class GameMap {
         return cells[x][y];
     }
 
+    public Cell getStairsUp() {
+        for (Cell[] cellRow : cells) {
+            for (Cell cellCol : cellRow) {
+                if (cellCol.getType() == CellType.STAIRS_UP){
+                    return cellCol;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Cell getStairsDown() {
+        for (Cell[] cellRow : cells) {
+            for (Cell cellCol : cellRow) {
+                if (cellCol.getType() == CellType.STAIRS_DOWN){
+                    return cellCol;
+                }
+            }
+        }
+        return null;
+    }
+
     public void setPlayer(Player player) {
         this.player = player;
     }

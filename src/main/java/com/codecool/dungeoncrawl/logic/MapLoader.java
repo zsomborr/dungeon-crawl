@@ -68,7 +68,7 @@ public class MapLoader {
                             cell.setType(CellType.CLOSED_DOOR);
                             break;
                         case 'T':
-                            cell.setType(CellType.STAIRS);
+                            cell.setType(CellType.STAIRS_UP);
                             break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");

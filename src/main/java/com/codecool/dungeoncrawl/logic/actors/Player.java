@@ -7,14 +7,14 @@ import com.codecool.dungeoncrawl.logic.item.Key;
 import com.codecool.dungeoncrawl.logic.item.Potion;
 import com.codecool.dungeoncrawl.logic.item.Sword;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Player extends Actor {
     private String name;
     private boolean onItem = false;
     private List<Item> inventory;
-    private boolean onStairs = false;
+    private boolean onStairsDown;
+    private boolean onStairsUp;
 
     public Player(Cell cell) {
         health = 20;
@@ -47,14 +47,32 @@ public class Player extends Actor {
         return onItem;
     }
 
-    public List<Item> getInventory() {
-        return inventory;
+    public String getInventory() {
+        StringBuilder inventoryFormatted = new StringBuilder();
+        List<String> inventoryString = inventoryToStrings();
+        Set<String> inventorySet = new HashSet<>(inventoryString);
+        for(String item: inventorySet){
+            inventoryFormatted.append(item)
+                    .append(" ")
+                    .append(Collections.frequency(inventoryString,item))
+                    .append("\n");
+        }
+        return inventoryFormatted.toString();
+    }
+
+    private List<String> inventoryToStrings(){
+        List<String> inventoryString = new ArrayList<>();
+        for (Item item : inventory) {
+            inventoryString.add(item.getTileName());
+        }
+        return inventoryString;
     }
 
     @Override
     public void move(int dx, int dy) {
         onItem = false;
-        onStairs = false;
+        onStairsUp = false;
+        onStairsDown = false;
         Cell nextCell = cell.getNeighbor(dx, dy);
         if (nextCell.getType() != CellType.CLOSED_DOOR
                 && nextCell.getActor() == null) {
@@ -67,11 +85,12 @@ public class Player extends Actor {
             }
         } else if (nextCell.getType() == CellType.CLOSED_DOOR) {
             tryOpenDoor(nextCell);
-        } else if (nextCell.getType() == CellType.STAIRS) {
-            onStairs = true;
+        } else if (nextCell.getType() == CellType.STAIRS_UP) {
+            onStairsUp = true;
+        } else if (nextCell.getType() == CellType.STAIRS_DOWN) {
+            onStairsDown = true;
         } else if (nextCell.getActor() != null && nextCell.getActor() != this) {
             fight(nextCell);
-            System.out.println(health);
         }
     }
 
@@ -101,8 +120,12 @@ public class Player extends Actor {
         System.out.println(health);
     }
 
-    public boolean isOnStairs(){
-        return onStairs;
+    public boolean isOnStairsUp() {
+        return onStairsUp;
+    }
+
+    public boolean isOnStairsDown() {
+        return onStairsDown;
     }
 
     private void checkIfOnItem(Cell nextCell) {
