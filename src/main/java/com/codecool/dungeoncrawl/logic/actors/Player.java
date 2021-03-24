@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Actor {
+    private String name;
     private boolean onItem = false;
     private List<Item> inventory;
 
@@ -30,7 +31,7 @@ public class Player extends Actor {
     }
 
     private void changePlayerStat(Item item) {
-        if (item instanceof Potion){
+        if (item instanceof Potion) {
             health += item.getStat();
         } else if (item instanceof Sword) {
             strength += item.getStat();
@@ -53,23 +54,35 @@ public class Player extends Actor {
     public void move(int dx, int dy) {
         onItem = false;
         Cell nextCell = cell.getNeighbor(dx, dy);
-        if (nextCell.getType() != CellType.WALL && nextCell.getType() != CellType.CLOSED_DOOR
+        if (nextCell.getType() != CellType.CLOSED_DOOR
                 && nextCell.getActor() == null) {
-            checkIfOnItem(nextCell);
-            cell.setActor(null);
-            nextCell.setActor(this);
-            cell = nextCell;
-        } else if (nextCell.getActor() != null) {
-            fight(nextCell);
-            System.out.println(health);
+            if (name.equals("zsombor") || name.equals("bence")) {
+                takeStep(nextCell);
+            } else {
+                if (nextCell.getType() != CellType.WALL) {
+                    takeStep(nextCell);
+                }
+            }
         } else if (nextCell.getType() == CellType.CLOSED_DOOR) {
             tryOpenDoor(nextCell);
+        } else if (nextCell.getType() == CellType.STAIRS) {
+            onStairs = true;
+        } else if (nextCell.getActor() != null && nextCell.getActor() != this) {
+            fight(nextCell);
+            System.out.println(health);
         }
+    }
+
+    private void takeStep(Cell nextCell) {
+        checkIfOnItem(nextCell);
+        cell.setActor(null);
+        nextCell.setActor(this);
+        cell = nextCell;
     }
 
     private void tryOpenDoor(Cell nextCell) {
         for (Item item : inventory) {
-            if (item instanceof Key){
+            if (item instanceof Key) {
                 nextCell.setType(CellType.OPEN_DOOR);
             }
         }
@@ -86,9 +99,21 @@ public class Player extends Actor {
         System.out.println(health);
     }
 
+    public boolean isOnStairs(){
+        return onStairs;
+    }
+
     private void checkIfOnItem(Cell nextCell) {
         if (nextCell.getItem() != null) {
             onItem = true;
         }
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }
