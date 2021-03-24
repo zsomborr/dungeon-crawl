@@ -30,7 +30,11 @@ public class Main extends Application {
     Label healthLabel = new Label();
     Label inventoryLabel = new Label();
     Label strengthLabel = new Label();
-    Button button = new Button("Pick up");
+    Label nameLabel = new Label();
+    Button pickupButton = new Button("Pick up");
+    Button nameButton = new Button("Set Name");
+    TextField nameTextField = new TextField();
+    GridPane ui = new GridPane();
 
     public static void main(String[] args) {
         launch(args);

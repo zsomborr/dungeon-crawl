@@ -14,6 +14,7 @@ public class Player extends Actor {
     private String name;
     private boolean onItem = false;
     private List<Item> inventory;
+    private boolean onStairs = false;
 
     public Player(Cell cell) {
         health = 20;
@@ -53,6 +54,7 @@ public class Player extends Actor {
     @Override
     public void move(int dx, int dy) {
         onItem = false;
+        onStairs = false;
         Cell nextCell = cell.getNeighbor(dx, dy);
         if (nextCell.getType() != CellType.CLOSED_DOOR
                 && nextCell.getActor() == null) {

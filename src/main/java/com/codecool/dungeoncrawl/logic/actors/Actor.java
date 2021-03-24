@@ -30,6 +30,10 @@ public abstract class Actor implements Drawable {
         return strength;
     }
 
+    public void setCell(Cell cell) {
+        this.cell = cell;
+    }
+
     public Cell getCell() {
         return cell;
     }
