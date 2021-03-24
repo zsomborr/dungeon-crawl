@@ -157,6 +157,13 @@ public class Main extends Application {
         }
     }
 
+    private void createMaps() {
+        String[] mapTxts = {"/map1.txt" , "/map2.txt", "/map3.txt"};
+        for (String mapTxt : mapTxts) {
+            maps.add(MapLoader.loadMap(mapTxt));
+        }
+    }
+
     private void refresh() {
         changeCurrentMap();
         Color background = Color.rgb(71,45,60);
@@ -178,6 +185,32 @@ public class Main extends Application {
             }
         }
         changeLabels();
+    }
+
+    private void changeCurrentMap() {
+        if (currentMap.getPlayer().isOnStairsUp()){
+            Player currentPlayer = currentMap.getPlayer();
+            currentMapIndex++;
+            currentMap = maps.get(currentMapIndex);
+            Cell currentCell =  currentMap.getStairsDown();
+            currentMap.setPlayer(currentPlayer);
+            currentMap.getPlayer().setCell(currentCell);
+        } else if (currentMap.getPlayer().isOnStairsDown()){
+            Player currentPlayer = currentMap.getPlayer();
+            currentMapIndex--;
+            currentMap = maps.get(currentMapIndex);
+            System.out.println(currentMapIndex);
+            Cell currentCell = currentMap.getStairsUp();
+            currentMap.setPlayer(currentPlayer);
+            currentMap.getPlayer().setCell(currentCell);
+        }
+    }
+
+    private void changeLabels() {
+        healthLabel.setText("" + currentMap.getPlayer().getHealth());
+        inventoryLabel.setText("" + currentMap.getPlayer().getInventory());
+        strengthLabel.setText("" + currentMap.getPlayer().getStrength());
+        nameLabel.setText("" + currentMap.getPlayer().getName());
     }
 
     private void moveALlMonsters() {
