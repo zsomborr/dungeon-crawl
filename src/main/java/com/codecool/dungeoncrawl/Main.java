@@ -88,7 +88,7 @@ public class Main extends Application {
         });
     }
 
-    private void createLabels(){
+    private void createLabels() {
         Label nameHeader = new Label("Name: ");
         changeLabelColor(nameHeader);
         ui.add(nameHeader, 0, 1);
@@ -173,7 +173,7 @@ public class Main extends Application {
     }
 
     private void createMaps() {
-        String[] mapTxts = {"/map1.txt" , "/map2.txt", "/map3.txt"};
+        String[] mapTxts = {"/map1.txt", "/map2.txt", "/map3.txt"};
         for (String mapTxt : mapTxts) {
             maps.add(MapLoader.loadMap(mapTxt));
         }
@@ -182,13 +182,13 @@ public class Main extends Application {
     private void refresh() {
         checkIfGameOver();
         changeCurrentMap();
-        Color background = Color.rgb(71,45,60);
+        Color background = Color.rgb(71, 45, 60);
         context.setFill(background);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < currentMap.getWidth(); x++) {
             for (int y = 0; y < currentMap.getHeight(); y++) {
-                int centeredX = x - currentMap.getPlayer().getX() + canvasWidth/2;
-                int centeredY = y - currentMap.getPlayer().getY() + canvasWidth/2;
+                int centeredX = x - currentMap.getPlayer().getX() + canvasWidth / 2;
+                int centeredY = y - currentMap.getPlayer().getY() + canvasWidth / 2;
                 Cell cell = currentMap.getCell(x, y);
 
                 if (cell.getActor() != null) {
@@ -204,14 +204,14 @@ public class Main extends Application {
     }
 
     private void changeCurrentMap() {
-        if (currentMap.getPlayer().isOnStairsUp()){
+        if (currentMap.getPlayer().isOnStairsUp()) {
             Player currentPlayer = currentMap.getPlayer();
             currentMapIndex++;
             currentMap = maps.get(currentMapIndex);
-            Cell currentCell =  currentMap.getStairsDown();
+            Cell currentCell = currentMap.getStairsDown();
             currentMap.setPlayer(currentPlayer);
             currentMap.getPlayer().setCell(currentCell);
-        } else if (currentMap.getPlayer().isOnStairsDown()){
+        } else if (currentMap.getPlayer().isOnStairsDown()) {
             Player currentPlayer = currentMap.getPlayer();
             currentMapIndex--;
             currentMap = maps.get(currentMapIndex);
@@ -227,7 +227,7 @@ public class Main extends Application {
         changeHealthColor();
         inventoryLabel.setText("" + currentMap.getPlayer().getInventoryString());
         changeLabelColor(inventoryLabel);
-        strengthLabel.setText("" + currentMap.getPlayer().getStrength()+ " STR");
+        strengthLabel.setText("" + currentMap.getPlayer().getStrength() + " STR");
         changeLabelColor(strengthLabel);
         nameLabel.setText("" + currentMap.getPlayer().getName());
         changeLabelColor(nameLabel);
@@ -236,22 +236,22 @@ public class Main extends Application {
     }
 
     private void changeHealthColor() {
-        if (currentMap.getPlayer().isPoisoned()){
+        if (currentMap.getPlayer().isPoisoned()) {
             healthLabel.setTextFill(Color.web("#ed3e24"));
         } else {
             healthLabel.setTextFill(Color.web("white"));
         }
     }
 
-    private void changeLabelColor(Label label){
+    private void changeLabelColor(Label label) {
         label.setTextFill(Color.web("white"));
     }
 
-    private void checkIfGameOver(){
+    private void checkIfGameOver() {
         if (currentMap.getPlayer().getHealth() <= 0) {
             endGame("You lose!");
-        } else if (currentMap.getBoss() != null){
-            if (currentMap.getBoss().getHealth() <= 0){
+        } else if (currentMap.getBoss() != null) {
+            if (currentMap.getBoss().getHealth() <= 0) {
                 endGame("You win!");
             }
         }

@@ -1,10 +1,10 @@
 package com.codecool.dungeoncrawl.logic;
 
 import com.codecool.dungeoncrawl.logic.actors.*;
-import com.codecool.dungeoncrawl.logic.item.Boat;
-import com.codecool.dungeoncrawl.logic.item.Potion;
-import com.codecool.dungeoncrawl.logic.item.Sword;
-import com.codecool.dungeoncrawl.logic.item.Key;
+import com.codecool.dungeoncrawl.logic.items.Boat;
+import com.codecool.dungeoncrawl.logic.items.Potion;
+import com.codecool.dungeoncrawl.logic.items.Sword;
+import com.codecool.dungeoncrawl.logic.items.Key;
 
 import java.io.InputStream;
 import java.util.Scanner;

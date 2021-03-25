@@ -1,7 +1,7 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.CellType;
+import com.codecool.dungeoncrawl.logic.Direction;
 
 
 public class Spider extends Actor {
@@ -23,19 +23,12 @@ public class Spider extends Actor {
     @Override
     public void move() {
         if (health > 0) {
-            int[] randomDirection = getRandomDirection();
-            int dx = randomDirection[0];
-            int dy = randomDirection[1];
-
-            Cell nextCell = cell.getNeighbor(dx, dy);
-            if (nextCell.getType() != CellType.WALL
-                    && nextCell.getType() != CellType.CLOSED_DOOR
-                    && nextCell.getType() != CellType.LAVA
-                    && nextCell.getActor() == null
-                    && nextCell.getItem() == null) {
-                cell.setActor(null);
-                nextCell.setActor(this);
-                cell = nextCell;
+            try {
+                int[] randomDirection = Direction.getRandomDirection();
+                int dx = randomDirection[0];
+                int dy = randomDirection[1];
+                super.move(dx, dy);
+            } catch (Exception ignore){
             }
         }
     }

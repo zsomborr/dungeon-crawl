@@ -1,11 +1,8 @@
 package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
+import com.codecool.dungeoncrawl.logic.CellType;
 import com.codecool.dungeoncrawl.logic.Drawable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public abstract class Actor implements Drawable {
     protected Cell cell;
@@ -13,7 +10,17 @@ public abstract class Actor implements Drawable {
     protected int strength;
     protected int expForDeath;
 
-    public void move(int dx, int dy) {
+    public void move(int dx, int dy) throws Exception{
+        Cell nextCell = cell.getNeighbor(dx, dy);
+        if (nextCell.getType() != CellType.WALL
+                && nextCell.getType() != CellType.CLOSED_DOOR
+                && nextCell.getType() != CellType.LAVA
+                && nextCell.getActor() == null
+                && nextCell.getItem() == null) {
+            cell.setActor(null);
+            nextCell.setActor(this);
+            cell = nextCell;
+        } else throw new Exception();
     }
 
     public void move() {
@@ -53,16 +60,5 @@ public abstract class Actor implements Drawable {
 
     public int getExpForDeath() {
         return expForDeath;
-    }
-
-    public int[] getRandomDirection() {
-        List<int[]> directions = new ArrayList<>();
-        directions.add(new int[]{0, -1});
-        directions.add(new int[]{0, 1});
-        directions.add(new int[]{-1, 0});
-        directions.add(new int[]{1, 0});
-
-        Random random = new Random();
-        return directions.get(random.nextInt(4));
     }
 }

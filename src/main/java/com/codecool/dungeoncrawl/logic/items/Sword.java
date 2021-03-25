@@ -1,16 +1,18 @@
-package com.codecool.dungeoncrawl.logic.item;
+package com.codecool.dungeoncrawl.logic.items;
+
 
 import com.codecool.dungeoncrawl.logic.Cell;
 
-public class Boat extends Item {
+public class Sword extends Item {
 
-    public Boat(Cell cell) {
+    public Sword(Cell cell) {
         this.cell = cell;
         this.cell.setItem(this);
+        stat = 2;
     }
 
     @Override
     public String getTileName() {
-        return "boat";
+        return "sword";
     }
 }

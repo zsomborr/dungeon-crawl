@@ -2,6 +2,7 @@ package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
+import com.codecool.dungeoncrawl.logic.Direction;
 
 public class Ghost extends Actor {
     private int teleportCoolDown;
@@ -28,7 +29,7 @@ public class Ghost extends Actor {
                 nextCell = cell.getGameMap().getRandomEmptyCell();
                 teleportCoolDown = 0;
             } else {
-                int[] randomDirection = getRandomDirection();
+                int[] randomDirection = Direction.getRandomDirection();
                 int dx = randomDirection[0];
                 int dy = randomDirection[1];
                 nextCell = cell.getNeighbor(dx, dy);

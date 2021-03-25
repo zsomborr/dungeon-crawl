@@ -1,16 +1,16 @@
-package com.codecool.dungeoncrawl.logic.item;
+package com.codecool.dungeoncrawl.logic.items;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 
-public class Key extends Item {
+public class Boat extends Item {
 
-    public Key(Cell cell) {
+    public Boat(Cell cell) {
         this.cell = cell;
         this.cell.setItem(this);
     }
 
     @Override
     public String getTileName() {
-        return "key";
+        return "boat";
     }
 }
