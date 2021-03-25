@@ -54,7 +54,7 @@ public class Main extends Application {
 
         addPickupButton();
         addNameButtonAndTextField();
-        addLabels();
+        createLabels();
 
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
@@ -70,8 +70,8 @@ public class Main extends Application {
 
     private void addNameButtonAndTextField() {
         nameTextField.setPrefWidth(40);
-        ui.add(nameTextField, 0, 1);
-        ui.add(nameButton, 1, 1);
+        ui.add(nameTextField, 0, 0);
+        ui.add(nameButton, 1, 0);
 
 
 //        nameButton.setDisable(true);
@@ -87,20 +87,30 @@ public class Main extends Application {
         });
     }
 
-    private void addLabels(){
-        ui.add(new Label("Name: "), 0, 0);
-        ui.add(nameLabel, 1, 0);
+    private void createLabels(){
+        Label nameHeader = new Label("Name: ");
+        changeLabelColor(nameHeader);
+        ui.add(nameHeader, 0, 1);
+        ui.add(nameLabel, 1, 1);
 
-        ui.add(new Label("Experience: "), 0, 2);
+        Label expHeader = new Label("Experience: ");
+        changeLabelColor(expHeader);
+        ui.add(expHeader, 0, 2);
         ui.add(expLabel, 1, 2);
 
-        ui.add(new Label("Health: "), 0, 3);
+        Label healthHeader = new Label("Health: ");
+        changeLabelColor(healthHeader);
+        ui.add(healthHeader, 0, 3);
         ui.add(healthLabel, 1, 3);
 
-        ui.add(new Label("Strength: "), 0, 4);
+        Label strengthHeader = new Label("Strength: ");
+        changeLabelColor(strengthHeader);
+        ui.add(strengthHeader, 0, 4);
         ui.add(strengthLabel, 1, 4);
 
-        ui.add(new Label("Inventory: "), 0, 5);
+        Label inventoryHeader = new Label("Inventory: ");
+        changeLabelColor(inventoryHeader);
+        ui.add(inventoryHeader, 0, 5);
         ui.add(inventoryLabel, 1, 5);
     }
 
@@ -215,22 +225,34 @@ public class Main extends Application {
         healthLabel.setText("" + currentMap.getPlayer().getHealth() + " HP");
         changeHealthColor();
         inventoryLabel.setText("" + currentMap.getPlayer().getInventoryString());
+        changeLabelColor(inventoryLabel);
         strengthLabel.setText("" + currentMap.getPlayer().getStrength()+ " STR");
+        changeLabelColor(strengthLabel);
         nameLabel.setText("" + currentMap.getPlayer().getName());
+        changeLabelColor(nameLabel);
         expLabel.setText("" + currentMap.getPlayer().getExperience() + " XP");
+        changeLabelColor(expLabel);
     }
 
     private void changeHealthColor() {
         if (currentMap.getPlayer().isPoisoned()){
             healthLabel.setTextFill(Color.web("#ed3e24"));
         } else {
-            healthLabel.setTextFill(Color.web("black"));
+            healthLabel.setTextFill(Color.web("white"));
         }
+    }
+
+    private void changeLabelColor(Label label){
+        label.setTextFill(Color.web("white"));
     }
 
     private void checkIfGameOver(){
         if (currentMap.getPlayer().getHealth() <= 0) {
-            gameEnd();
+            endGame("You lose!");
+        } else if (currentMap.getBoss() != null){
+            if (currentMap.getBoss().getHealth() <= 0){
+                endGame("You win!");
+            }
         }
     }
 

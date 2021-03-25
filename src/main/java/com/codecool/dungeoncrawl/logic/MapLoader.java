@@ -1,9 +1,7 @@
 package com.codecool.dungeoncrawl.logic;
 
-import com.codecool.dungeoncrawl.logic.actors.Ghost;
-import com.codecool.dungeoncrawl.logic.actors.Player;
-import com.codecool.dungeoncrawl.logic.actors.Skeleton;
-import com.codecool.dungeoncrawl.logic.actors.Spider;
+import com.codecool.dungeoncrawl.logic.actors.*;
+import com.codecool.dungeoncrawl.logic.item.Boat;
 import com.codecool.dungeoncrawl.logic.item.Potion;
 import com.codecool.dungeoncrawl.logic.item.Sword;
 import com.codecool.dungeoncrawl.logic.item.Key;
@@ -60,6 +58,10 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             map.addMonster(new Spider(cell));
                             break;
+                        case 'B':
+                            cell.setType(CellType.FLOOR);
+                            map.addMonster(new Boss(cell));
+                            break;
                         case 'k':
                             cell.setType(CellType.FLOOR);
                             new Key(cell);
@@ -75,6 +77,12 @@ public class MapLoader {
                             break;
                         case 'f':
                             cell.setType(CellType.LAVA);
+                            break;
+                        case 'w':
+                            cell.setType(CellType.WATER);
+                            break;
+                        case 'h':
+                            cell.setType(CellType.BRIDGE);
                             break;
                         default:
                             throw new RuntimeException("Unrecognized character: '" + line.charAt(x) + "'");

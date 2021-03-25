@@ -2,10 +2,7 @@ package com.codecool.dungeoncrawl.logic.actors;
 
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.CellType;
-import com.codecool.dungeoncrawl.logic.item.Item;
-import com.codecool.dungeoncrawl.logic.item.Key;
-import com.codecool.dungeoncrawl.logic.item.Potion;
-import com.codecool.dungeoncrawl.logic.item.Sword;
+import com.codecool.dungeoncrawl.logic.item.*;
 
 import java.util.*;
 
@@ -19,7 +16,7 @@ public class Player extends Actor {
     private int poisonCount;
 
     public Player(Cell cell) {
-        health =  4;
+        health = 10000;
         strength = 5;
         inventory = new ArrayList<>();
         super.cell = cell;
@@ -73,16 +70,16 @@ public class Player extends Actor {
         StringBuilder inventoryFormatted = new StringBuilder();
         List<String> inventoryString = inventoryToStrings();
         Set<String> inventorySet = new HashSet<>(inventoryString);
-        for(String item: inventorySet){
+        for (String item : inventorySet) {
             inventoryFormatted.append(item)
                     .append(" ")
-                    .append(Collections.frequency(inventoryString,item))
+                    .append(Collections.frequency(inventoryString, item))
                     .append("\n");
         }
         return inventoryFormatted.toString();
     }
 
-    private List<String> inventoryToStrings(){
+    private List<String> inventoryToStrings() {
         List<String> inventoryString = new ArrayList<>();
         for (Item item : inventory) {
             inventoryString.add(item.getTileName());
@@ -97,15 +94,20 @@ public class Player extends Actor {
         onStairsDown = false;
         checkIfPoisoned();
         Cell nextCell = cell.getNeighbor(dx, dy);
+
         if (nextCell.getType() != CellType.CLOSED_DOOR
                 && nextCell.getActor() == null) {
             if (name.equals("zsombor") || name.equals("bence")) {
                 takeStep(nextCell);
             } else {
-                if (nextCell.getType() != CellType.WALL) {
-                    if (nextCell.getType() == CellType.LAVA) {
-                        health -= 10;
+                if (nextCell.getType() == CellType.LAVA) {
+                    health -= 10;
+                    takeStep(nextCell);
+                } else if (nextCell.getType() == CellType.WATER) {
+                    if (hasBoat()) {
+                        takeStep(nextCell);
                     }
+                } else if (nextCell.getType() != CellType.WALL){
                     takeStep(nextCell);
                 }
             }
@@ -138,9 +140,18 @@ public class Player extends Actor {
         inventory.remove(key);
     }
 
+    private boolean hasBoat() {
+        for (Item item : inventory) {
+            if (item instanceof Boat) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void fight(Cell nextCell) {
         Actor enemy = nextCell.getActor();
-        if (enemy instanceof Spider){
+        if (enemy instanceof Spider) {
             poisonCount = 3;
         }
         int enemyHealth = enemy.getHealth();
@@ -152,23 +163,22 @@ public class Player extends Actor {
             experience += plusExp;
             this.setHealth(health + (plusExp * 3));
             this.setStrength(strength + plusExp);
-            nextCell.setActor(null);
+            if (!(enemy instanceof Boss)) {
+                nextCell.setActor(null);
+            }
         }
         System.out.println(health);
     }
 
     private void checkIfPoisoned() {
-        if (poisonCount > 0){
+        if (poisonCount > 0) {
             health--;
             poisonCount--;
         }
     }
 
-    public boolean isPoisoned(){
-        if (poisonCount > 0){
-            return true;
-        }
-        return false;
+    public boolean isPoisoned() {
+        return poisonCount > 0;
     }
 
     private void checkIfOnItem(Cell nextCell) {
