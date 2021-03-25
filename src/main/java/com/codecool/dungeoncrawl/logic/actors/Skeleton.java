@@ -9,6 +9,7 @@ public class Skeleton extends Actor {
         super.cell.setActor(this);
         health = 10;
         strength = 2;
+        expForDeath = 1;
     }
 
     @Override

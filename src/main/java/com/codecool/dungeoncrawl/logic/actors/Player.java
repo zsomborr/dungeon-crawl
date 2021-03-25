@@ -10,14 +10,16 @@ import com.codecool.dungeoncrawl.logic.item.Sword;
 import java.util.*;
 
 public class Player extends Actor {
+    private int experience;
     private String name;
     private boolean onItem = false;
     private List<Item> inventory;
     private boolean onStairsDown;
     private boolean onStairsUp;
+    private int poisonCount;
 
     public Player(Cell cell) {
-        health = 20;
+        health =  4;
         strength = 5;
         inventory = new ArrayList<>();
         super.cell = cell;
@@ -47,7 +49,7 @@ public class Player extends Actor {
         return onItem;
     }
 
-    public String getInventory() {
+    public String getInventoryString() {
         StringBuilder inventoryFormatted = new StringBuilder();
         List<String> inventoryString = inventoryToStrings();
         Set<String> inventorySet = new HashSet<>(inventoryString);
@@ -73,6 +75,7 @@ public class Player extends Actor {
         onItem = false;
         onStairsUp = false;
         onStairsDown = false;
+        checkIfPoisoned();
         Cell nextCell = cell.getNeighbor(dx, dy);
         if (nextCell.getType() != CellType.CLOSED_DOOR
                 && nextCell.getActor() == null) {
@@ -107,25 +110,33 @@ public class Player extends Actor {
                 nextCell.setType(CellType.OPEN_DOOR);
             }
         }
+        inventory.remove(key);
     }
 
     private void fight(Cell nextCell) {
-        int enemyHealth = nextCell.getActor().getHealth();
-        int enemyStrength = nextCell.getActor().getStrength();
-        nextCell.getActor().setHealth(enemyHealth - strength);
+        Actor enemy = nextCell.getActor();
+        if (enemy instanceof Spider){
+            poisonCount = 3;
+        }
+        int enemyHealth = enemy.getHealth();
+        int enemyStrength = enemy.getStrength();
+        enemy.setHealth(enemyHealth - strength);
         this.setHealth(health - enemyStrength);
-        if (nextCell.getActor().getHealth() <= 0) {
+        if (enemy.getHealth() <= 0) {
+            int plusExp = enemy.getExpForDeath();
+            experience += plusExp;
+            this.setHealth(health + (plusExp * 3));
+            this.setStrength(strength + plusExp);
             nextCell.setActor(null);
         }
         System.out.println(health);
     }
 
-    public boolean isOnStairsUp() {
-        return onStairsUp;
-    }
-
-    public boolean isOnStairsDown() {
-        return onStairsDown;
+    public boolean isPoisoned(){
+        if (poisonCount > 0){
+            return true;
+        }
+        return false;
     }
 
     private void checkIfOnItem(Cell nextCell) {
@@ -134,11 +145,5 @@ public class Player extends Actor {
         }
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public String getName() {
-        return name;
-    }
 }

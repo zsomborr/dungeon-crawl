@@ -12,6 +12,7 @@ public class Ghost extends Actor {
         health = 20;
         strength = 3;
         teleportCoolDown = 0;
+        expForDeath = 1;
     }
 
     @Override

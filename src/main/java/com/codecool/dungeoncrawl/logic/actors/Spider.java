@@ -10,7 +10,8 @@ public class Spider extends Actor {
         super.cell = cell;
         super.cell.setActor(this);
         health = 5;
-        strength = 8;
+        strength = 6;
+        expForDeath = 1;
     }
 
     @Override

@@ -11,6 +11,7 @@ public abstract class Actor implements Drawable {
     protected Cell cell;
     protected int health;
     protected int strength;
+    protected int expForDeath;
 
     public void move(int dx, int dy) {
     }
@@ -30,6 +31,10 @@ public abstract class Actor implements Drawable {
         return strength;
     }
 
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
     public void setCell(Cell cell) {
         this.cell = cell;
     }
@@ -44,6 +49,10 @@ public abstract class Actor implements Drawable {
 
     public int getY() {
         return cell.getY();
+    }
+
+    public int getExpForDeath() {
+        return expForDeath;
     }
 
     public int[] getRandomDirection() {

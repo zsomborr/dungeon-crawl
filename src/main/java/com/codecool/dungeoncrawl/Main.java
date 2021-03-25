@@ -29,6 +29,7 @@ public class Main extends Application {
     Canvas canvas = new Canvas(
             canvasWidth * Tiles.TILE_WIDTH,
             canvasWidth * Tiles.TILE_WIDTH);
+    BorderPane borderPane = new BorderPane();
     GraphicsContext context = canvas.getGraphicsContext2D();
     Label healthLabel = new Label();
     Label inventoryLabel = new Label();
@@ -54,7 +55,6 @@ public class Main extends Application {
         addNameButtonAndTextField();
         addLabels();
 
-        BorderPane borderPane = new BorderPane();
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
 
@@ -90,8 +90,8 @@ public class Main extends Application {
         ui.add(new Label("Name: "), 0, 0);
         ui.add(nameLabel, 1, 0);
 
-        ui.add(new Label("Health: "), 0, 2);
-        ui.add(healthLabel, 1, 2);
+        ui.add(new Label("Health: "), 0, 3);
+        ui.add(healthLabel, 1, 3);
 
         ui.add(new Label("Strength: "), 0, 3);
         ui.add(strengthLabel, 1, 3);
@@ -101,7 +101,7 @@ public class Main extends Application {
     }
 
     private void addPickupButton() {
-        ui.add(pickupButton, 0, 5);
+        ui.add(pickupButton, 0, 6);
         pickupButton.setDisable(true);
 
         pickupButton.setOnAction(value -> {
@@ -165,6 +165,7 @@ public class Main extends Application {
     }
 
     private void refresh() {
+        checkIfGameOver();
         changeCurrentMap();
         Color background = Color.rgb(71,45,60);
         context.setFill(background);
@@ -207,10 +208,36 @@ public class Main extends Application {
     }
 
     private void changeLabels() {
-        healthLabel.setText("" + currentMap.getPlayer().getHealth());
-        inventoryLabel.setText("" + currentMap.getPlayer().getInventory());
-        strengthLabel.setText("" + currentMap.getPlayer().getStrength());
+        healthLabel.setText("" + currentMap.getPlayer().getHealth() + " HP");
+        changeHealthColor();
+        inventoryLabel.setText("" + currentMap.getPlayer().getInventoryString());
+        strengthLabel.setText("" + currentMap.getPlayer().getStrength()+ " STR");
         nameLabel.setText("" + currentMap.getPlayer().getName());
+        expLabel.setText("" + currentMap.getPlayer().getExperience() + " XP");
+    }
+
+    private void changeHealthColor() {
+        if (currentMap.getPlayer().isPoisoned()){
+            healthLabel.setTextFill(Color.web("#ed3e24"));
+        } else {
+            healthLabel.setTextFill(Color.web("black"));
+        }
+    }
+
+    private void checkIfGameOver(){
+        if (currentMap.getPlayer().getHealth() <= 0) {
+            gameEnd();
+        }
+    }
+
+    private void gameEnd() {
+        Label endMessage = new Label("You died!");
+        BorderPane endPane = new BorderPane(endMessage);
+        Scene endScene = new Scene(endPane, 300, 100);
+        Stage endStage = new Stage();
+        endStage.setScene(endScene);
+        endStage.setTitle("Cool Window");
+        endStage.show();
     }
 
     private void moveALlMonsters() {
