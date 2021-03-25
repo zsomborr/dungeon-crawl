@@ -46,6 +46,10 @@ public class MapLoader {
                             cell.setType(CellType.FLOOR);
                             new Sword(cell);
                             break;
+                        case 't':
+                            cell.setType(CellType.FLOOR);
+                            new Boat(cell);
+                            break;
                         case 'O':
                             cell.setType(CellType.FLOOR);
                             new Potion(cell);

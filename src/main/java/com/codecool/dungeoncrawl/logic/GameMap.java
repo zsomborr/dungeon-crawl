@@ -75,6 +75,17 @@ public class GameMap {
         return null;
     }
 
+    public Actor getBoss() {
+        for (Cell[] cellRow : cells) {
+            for (Cell cellCol : cellRow) {
+                if (cellCol.getActor() instanceof Boss){
+                    return cellCol.getActor();
+                }
+            }
+        }
+        return null;
+    }
+
     public void setPlayer(Player player) {
         this.player = player;
     }

@@ -51,6 +51,7 @@ public class Main extends Application {
         currentMap = maps.get(currentMapIndex);
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
+        ui.setStyle("-fx-background-color:#472D3C");
 
         addPickupButton();
         addNameButtonAndTextField();
@@ -256,13 +257,13 @@ public class Main extends Application {
         }
     }
 
-    private void gameEnd() {
-        Label endMessage = new Label("You died!");
-        BorderPane endPane = new BorderPane(endMessage);
+    private void endGame(String message) {
+        Label loseMessage = new Label(message);
+        BorderPane endPane = new BorderPane(loseMessage);
         Scene endScene = new Scene(endPane, 300, 100);
         Stage endStage = new Stage();
         endStage.setScene(endScene);
-        endStage.setTitle("Cool Window");
+        endStage.setTitle("Game ended");
         endStage.show();
     }
 
