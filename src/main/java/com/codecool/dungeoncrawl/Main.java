@@ -35,6 +35,7 @@ public class Main extends Application {
     Label inventoryLabel = new Label();
     Label strengthLabel = new Label();
     Label nameLabel = new Label();
+    Label expLabel = new Label();
     Button pickupButton = new Button("Pick up");
     Button nameButton = new Button("Set Name");
     TextField nameTextField = new TextField();
@@ -90,14 +91,17 @@ public class Main extends Application {
         ui.add(new Label("Name: "), 0, 0);
         ui.add(nameLabel, 1, 0);
 
+        ui.add(new Label("Experience: "), 0, 2);
+        ui.add(expLabel, 1, 2);
+
         ui.add(new Label("Health: "), 0, 3);
         ui.add(healthLabel, 1, 3);
 
-        ui.add(new Label("Strength: "), 0, 3);
-        ui.add(strengthLabel, 1, 3);
+        ui.add(new Label("Strength: "), 0, 4);
+        ui.add(strengthLabel, 1, 4);
 
-        ui.add(new Label("Inventory: "), 0, 4);
-        ui.add(inventoryLabel, 1, 4);
+        ui.add(new Label("Inventory: "), 0, 5);
+        ui.add(inventoryLabel, 1, 5);
     }
 
     private void addPickupButton() {

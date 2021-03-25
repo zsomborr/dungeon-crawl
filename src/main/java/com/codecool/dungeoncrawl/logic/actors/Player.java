@@ -26,6 +26,34 @@ public class Player extends Actor {
         super.cell.setActor(this);
     }
 
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTileName() {
+        return "player";
+    }
+
+    public boolean isOnItem() {
+        return onItem;
+    }
+
+    public boolean isOnStairsUp() {
+        return onStairsUp;
+    }
+
+    public boolean isOnStairsDown() {
+        return onStairsDown;
+    }
+
     public void addToInventory() {
         Item item = super.cell.getItem();
         changePlayerStat(item);
@@ -39,14 +67,6 @@ public class Player extends Actor {
         } else if (item instanceof Sword) {
             strength += item.getStat();
         }
-    }
-
-    public String getTileName() {
-        return "player";
-    }
-
-    public boolean isOnItem() {
-        return onItem;
     }
 
     public String getInventoryString() {
@@ -83,6 +103,9 @@ public class Player extends Actor {
                 takeStep(nextCell);
             } else {
                 if (nextCell.getType() != CellType.WALL) {
+                    if (nextCell.getType() == CellType.LAVA) {
+                        health -= 10;
+                    }
                     takeStep(nextCell);
                 }
             }
@@ -105,9 +128,11 @@ public class Player extends Actor {
     }
 
     private void tryOpenDoor(Cell nextCell) {
+        Item key = null;
         for (Item item : inventory) {
             if (item instanceof Key) {
                 nextCell.setType(CellType.OPEN_DOOR);
+                key = item;
             }
         }
         inventory.remove(key);
@@ -130,6 +155,13 @@ public class Player extends Actor {
             nextCell.setActor(null);
         }
         System.out.println(health);
+    }
+
+    private void checkIfPoisoned() {
+        if (poisonCount > 0){
+            health--;
+            poisonCount--;
+        }
     }
 
     public boolean isPoisoned(){

@@ -30,6 +30,7 @@ public class Spider extends Actor {
             Cell nextCell = cell.getNeighbor(dx, dy);
             if (nextCell.getType() != CellType.WALL
                     && nextCell.getType() != CellType.CLOSED_DOOR
+                    && nextCell.getType() != CellType.LAVA
                     && nextCell.getActor() == null
                     && nextCell.getItem() == null) {
                 cell.setActor(null);

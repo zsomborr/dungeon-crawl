@@ -36,6 +36,7 @@ public class Ghost extends Actor {
             }
             if (nextCell.getType() != CellType.EMPTY
                     && nextCell.getType() != CellType.CLOSED_DOOR
+                    && nextCell.getType() != CellType.LAVA
                     && nextCell.getActor() == null
                     && nextCell.getItem() == null) {
                 cell.setActor(null);
