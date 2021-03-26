@@ -64,7 +64,9 @@ public class MapLoader {
                             break;
                         case 'B':
                             cell.setType(CellType.FLOOR);
-                            map.addMonster(new Boss(cell));
+                            Actor boss = new Boss(cell);
+                            map.addMonster(boss);
+                            map.setBoss(boss);
                             break;
                         case 'k':
                             cell.setType(CellType.FLOOR);
@@ -75,9 +77,11 @@ public class MapLoader {
                             break;
                         case 'b':
                             cell.setType(CellType.STAIRS_DOWN);
+                            map.setStairDown(cell);
                             break;
                         case 'T':
                             cell.setType(CellType.STAIRS_UP);
+                            map.setStairUp(cell);
                             break;
                         case 'f':
                             cell.setType(CellType.LAVA);

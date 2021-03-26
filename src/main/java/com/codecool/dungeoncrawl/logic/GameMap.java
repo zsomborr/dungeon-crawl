@@ -16,6 +16,11 @@ public class GameMap {
     private Player player;
     private List<Actor> monsters;
 
+    private Cell stairUp;
+    private Cell stairDown;
+    private Actor boss;
+
+
     public GameMap(int width, int height, CellType defaultCellType) {
         monsters = new ArrayList<>();
         this.width = width;
@@ -54,36 +59,15 @@ public class GameMap {
     }
 
     public Cell getStairsUp() {
-        for (Cell[] cellRow : cells) {
-            for (Cell cellCol : cellRow) {
-                if (cellCol.getType() == CellType.STAIRS_UP){
-                    return cellCol;
-                }
-            }
-        }
-        return null;
+        return stairUp;
     }
 
     public Cell getStairsDown() {
-        for (Cell[] cellRow : cells) {
-            for (Cell cellCol : cellRow) {
-                if (cellCol.getType() == CellType.STAIRS_DOWN){
-                    return cellCol;
-                }
-            }
-        }
-        return null;
+        return stairDown;
     }
 
     public Actor getBoss() {
-        for (Cell[] cellRow : cells) {
-            for (Cell cellCol : cellRow) {
-                if (cellCol.getActor() instanceof Boss){
-                    return cellCol.getActor();
-                }
-            }
-        }
-        return null;
+        return boss;
     }
 
     public void setPlayer(Player player) {
@@ -100,5 +84,17 @@ public class GameMap {
 
     public int getHeight() {
         return height;
+    }
+
+    public void setBoss(Actor boss) {
+        this.boss = boss;
+    }
+
+    public void setStairDown(Cell stairDown) {
+        this.stairDown = stairDown;
+    }
+
+    public void setStairUp(Cell stairUp) {
+        this.stairUp = stairUp;
     }
 }

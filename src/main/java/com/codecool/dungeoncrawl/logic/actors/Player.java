@@ -16,7 +16,7 @@ public class Player extends Actor {
     private int poisonCount;
 
     public Player(Cell cell) {
-        health = 10000;
+        health = 30;
         strength = 5;
         inventory = new ArrayList<>();
         super.cell = cell;
@@ -97,20 +97,7 @@ public class Player extends Actor {
 
         if (nextCell.getType() != CellType.CLOSED_DOOR
                 && nextCell.getActor() == null) {
-            if (name.equals("zsombor") || name.equals("bence")) {
-                takeStep(nextCell);
-            } else {
-                if (nextCell.getType() == CellType.LAVA) {
-                    health -= 10;
-                    takeStep(nextCell);
-                } else if (nextCell.getType() == CellType.WATER) {
-                    if (hasBoat()) {
-                        takeStep(nextCell);
-                    }
-                } else if (nextCell.getType() != CellType.WALL){
-                    takeStep(nextCell);
-                }
-            }
+            handleCollision(nextCell);
         } else if (nextCell.getType() == CellType.CLOSED_DOOR) {
             tryOpenDoor(nextCell);
         } else if (nextCell.getType() == CellType.STAIRS_UP) {
@@ -119,6 +106,23 @@ public class Player extends Actor {
             onStairsDown = true;
         } else if (nextCell.getActor() != null && nextCell.getActor() != this) {
             fight(nextCell);
+        }
+    }
+
+    private void handleCollision(Cell nextCell){
+        if (name.equals("zsombor") || name.equals("bence")) {
+            takeStep(nextCell);
+        } else {
+            if (nextCell.getType() == CellType.LAVA) {
+                health -= 10;
+                takeStep(nextCell);
+            } else if (nextCell.getType() == CellType.WATER) {
+                if (hasBoat()) {
+                    takeStep(nextCell);
+                }
+            } else if (nextCell.getType() != CellType.WALL){
+                takeStep(nextCell);
+            }
         }
     }
 
@@ -186,6 +190,4 @@ public class Player extends Actor {
             onItem = true;
         }
     }
-
-
 }

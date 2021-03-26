@@ -189,6 +189,7 @@ public class Main extends Application {
             for (int y = 0; y < currentMap.getHeight(); y++) {
                 int centeredX = x - currentMap.getPlayer().getX() + canvasWidth / 2;
                 int centeredY = y - currentMap.getPlayer().getY() + canvasWidth / 2;
+
                 Cell cell = currentMap.getCell(x, y);
 
                 if (cell.getActor() != null) {
@@ -215,7 +216,6 @@ public class Main extends Application {
             Player currentPlayer = currentMap.getPlayer();
             currentMapIndex--;
             currentMap = maps.get(currentMapIndex);
-            System.out.println(currentMapIndex);
             Cell currentCell = currentMap.getStairsUp();
             currentMap.setPlayer(currentPlayer);
             currentMap.getPlayer().setCell(currentCell);
