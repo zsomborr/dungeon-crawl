@@ -15,6 +15,15 @@ public class Player extends Actor {
     private boolean onStairsUp;
     private int poisonCount;
 
+    public Player(Cell cell, String name) {
+        health = 30;
+        strength = 5;
+        inventory = new ArrayList<>();
+        super.cell = cell;
+        super.cell.setActor(this);
+        this.name = name;
+    }
+
     public Player(Cell cell) {
         health = 30;
         strength = 5;
