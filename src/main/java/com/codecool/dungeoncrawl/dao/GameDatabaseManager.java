@@ -13,15 +13,23 @@ import java.util.List;
 
 public class GameDatabaseManager {
     private PlayerDao playerDao;
+    private GameStateDao gameStateDao;
 
     public void setup() throws SQLException {
         DataSource dataSource = connect();
         playerDao = new PlayerDaoJdbc(dataSource);
+        gameStateDao = new GameStateDaoJdbc(dataSource);
     }
 
-    public void savePlayer(Player player) {
+    public void saveGame(Player player, String currentMap, List<String> otherMaps){
+        PlayerModel playerModel = savePlayer(player);
+        saveGameState(currentMap, playerModel, otherMaps);
+    }
+
+    private PlayerModel savePlayer(Player player) {
         PlayerModel model = new PlayerModel(player);
         playerDao.add(model);
+        return model;
     }
 
     private void saveGameState(String currentMap, PlayerModel player, List<String> otherMaps) {

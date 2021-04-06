@@ -186,8 +186,9 @@ public class Main extends Application {
                 break;
             case S:
                 Player player = currentMap.getPlayer();
-                dbManager.savePlayer(player);
-                System.out.print(MapWriter.getMapTxt(currentMap));
+                String currentMapTxt = MapWriter.getMapTxt(currentMap);
+                List<String> mapTxts = maps.stream().map(MapWriter::getMapTxt).collect(Collectors.toList());;
+                dbManager.saveGame(player, currentMapTxt, mapTxts);
                 break;
             default:
                 break;
