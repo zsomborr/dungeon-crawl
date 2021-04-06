@@ -1,8 +1,6 @@
 package com.codecool.dungeoncrawl;
 
-import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.GameMap;
-import com.codecool.dungeoncrawl.logic.MapLoader;
+import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
@@ -187,6 +185,7 @@ public class Main extends Application {
             case S:
                 Player player = currentMap.getPlayer();
                 dbManager.savePlayer(player);
+                System.out.print(MapWriter.getMapTxt(currentMap));
                 break;
             default:
                 break;
