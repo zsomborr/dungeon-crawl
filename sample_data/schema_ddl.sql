@@ -51,11 +51,18 @@ CREATE TABLE public.inventory
 DROP TABLE IF EXISTS public.map;
 CREATE TABLE public.map
 (
-    map_id   integer NOT NULL,
-    actor_id integer NOT NULL,
-    x        integer NOT NULL,
-    y        integer NOT NULL
+    id             serial  NOT NULL PRIMARY KEY,
+    map_layout     text    NOT NULL,
+    is_current_map boolean NOT NULL
 );
+
+DROP TABLE IF EXISTS public.item;
+CREATE TABLE item
+(
+    id   serial NOT NULL PRIMARY KEY,
+    name text   NOT NULL
+);
+
 
 ALTER TABLE ONLY public.game_state
     ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES public.player (id);
