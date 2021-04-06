@@ -16,15 +16,15 @@ CREATE TABLE public.game_state
 DROP TABLE IF EXISTS public.player;
 CREATE TABLE public.player
 (
-    id             serial  NOT NULL PRIMARY KEY,
-    player_name    text    NOT NULL,
-    hp             integer NOT NULL,
-    x              integer NOT NULL,
-    y              integer NOT NULL,
-    experience     integer NOT NULL,
-    strength       integer NOT NULL,
-    poison_count   integer NOT NULL,
-    inventory      text[] NOT NULL
+    id           serial  NOT NULL PRIMARY KEY,
+    player_name  text    NOT NULL,
+    hp           integer NOT NULL,
+    x            integer NOT NULL,
+    y            integer NOT NULL,
+    experience   integer NOT NULL,
+    strength     integer NOT NULL,
+    poison_count integer NOT NULL,
+    inventory    text[]  NOT NULL
 );
 
 DROP TABLE IF EXISTS public.maps;
@@ -39,7 +39,8 @@ CREATE TABLE public.map
 (
     id             serial  NOT NULL PRIMARY KEY,
     map_layout     text    NOT NULL,
-    is_current_map boolean NOT NULL
+    is_current_map boolean NOT NULL,
+    game_level          integer NOT NULL
 );
 
 ALTER TABLE ONLY public.game_state

@@ -27,6 +27,8 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main extends Application {
     int currentMapIndex;
