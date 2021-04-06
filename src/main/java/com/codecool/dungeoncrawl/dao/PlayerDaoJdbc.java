@@ -22,6 +22,10 @@ public class PlayerDaoJdbc implements PlayerDao {
             statement.setInt(2, player.getHp());
             statement.setInt(3, player.getX());
             statement.setInt(4, player.getY());
+            statement.setInt(5, player.getExperience());
+            statement.setInt(6, player.getStrength());
+            statement.setInt(7, player.getPoisonCount());
+            statement.setArray(8, inventoryArray);
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             resultSet.next();
