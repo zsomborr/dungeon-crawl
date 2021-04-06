@@ -32,6 +32,14 @@ public class Player extends Actor {
         super.cell.setActor(this);
     }
 
+    public List<Item> getInventory() {
+        return inventory;
+    }
+
+    public int getPoisonCount() {
+        return poisonCount;
+    }
+
     public int getExperience() {
         return experience;
     }

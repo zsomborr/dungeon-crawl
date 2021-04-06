@@ -22,6 +22,7 @@ CREATE TABLE public.player
     experience     integer NOT NULL,
     strength       integer NOT NULL,
     poison_count   integer NOT NULL,
+    inventory      text[] NOT NULL,
     x              integer NOT NULL,
     y              integer NOT NULL
 );
@@ -31,14 +32,6 @@ CREATE TABLE public.maps
 (
     game_state_id integer NOT NULL,
     map_id        integer NOT NULL
-);
-
-DROP TABLE IF EXISTS public.inventory;
-CREATE TABLE public.inventory
-(
-    player_id  integer NOT NULL,
-    item_id    integer NOT NULL,
-    item_count integer NOT NULL
 );
 
 DROP TABLE IF EXISTS public.map;
@@ -51,12 +44,6 @@ CREATE TABLE public.map
 
 ALTER TABLE ONLY public.game_state
     ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES public.player (id);
-
-ALTER TABLE ONLY public.inventory
-    ADD CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES public.player (id);
-
-ALTER TABLE ONLY public.inventory
-    ADD CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES public.item(id);
 
 ALTER TABLE ONLY public.maps
     ADD CONSTRAINT fk_game_state_id FOREIGN KEY (game_state_id) REFERENCES public.game_state (id);
