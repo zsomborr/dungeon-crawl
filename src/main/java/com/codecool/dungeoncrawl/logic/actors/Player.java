@@ -81,7 +81,7 @@ public class Player extends Actor {
 
     public String getInventoryString() {
         StringBuilder inventoryFormatted = new StringBuilder();
-        List<String> inventoryString = inventoryToStrings();
+        ArrayList<String> inventoryString = inventoryToStrings();
         Set<String> inventorySet = new HashSet<>(inventoryString);
         for (String item : inventorySet) {
             inventoryFormatted.append(item)
@@ -92,10 +92,18 @@ public class Player extends Actor {
         return inventoryFormatted.toString();
     }
 
-    private List<String> inventoryToStrings() {
-        List<String> inventoryString = new ArrayList<>();
+    public ArrayList<String> inventoryToStrings() {
+        ArrayList<String> inventoryString = new ArrayList<>();
         for (Item item : inventory) {
             inventoryString.add(item.getTileName());
+        }
+        return inventoryString;
+    }
+
+    public String[] inventoryToStringArray() {
+        String[] inventoryString = new String[inventory.size()];
+        for (int i = 0; i < inventory.size(); i++) {
+            inventoryString[i] = inventory.get(i).getTileName();
         }
         return inventoryString;
     }

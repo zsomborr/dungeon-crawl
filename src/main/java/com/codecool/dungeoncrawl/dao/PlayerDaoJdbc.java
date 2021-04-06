@@ -16,8 +16,18 @@ public class PlayerDaoJdbc implements PlayerDao {
     @Override
     public void add(PlayerModel player) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO player (player_name, hp, x, y) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO player (" +
+                    "player_name, " +
+                    "hp, " +
+                    "x, " +
+                    "y, " +
+                    "experience, " +
+                    "strength, " +
+                    "poison_count, " +
+                    "inventory) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            Array inventoryArray = conn.createArrayOf("text", player.getInventory().toArray());
             statement.setString(1, player.getPlayerName());
             statement.setInt(2, player.getHp());
             statement.setInt(3, player.getX());
