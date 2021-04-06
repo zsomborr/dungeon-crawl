@@ -3,7 +3,6 @@ package com.codecool.dungeoncrawl.model;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerModel extends BaseModel {
     private String playerName;
