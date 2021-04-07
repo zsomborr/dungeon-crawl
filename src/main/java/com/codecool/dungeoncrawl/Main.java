@@ -297,7 +297,6 @@ public class Main extends Application {
         VBox layout= new VBox(10);
 
         layout.getChildren().addAll(label1, nameField, saveButton, cancelButton);
-
         layout.setAlignment(Pos.CENTER);
 
         Scene scene1= new Scene(layout, 300, 250);
