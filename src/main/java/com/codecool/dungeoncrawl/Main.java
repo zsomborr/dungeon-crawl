@@ -119,15 +119,20 @@ public class Main extends Application {
     }
     
     private void loadMaps(int stateId) {
+        // must run after every save to update load options
         maps.clear();
         List<MapModel> mapModels = dbManager.getAllMapsFromStateId(stateId);
+        int mapIndex = 0;
         for (MapModel mapModel : mapModels) {
             String mapLayout = mapModel.getMapLayout();
             GameMap map = MapLoader.loadMap(mapLayout);
             maps.add(map);
             if (mapModel.isCurrentMap()) {
                 currentMap = map;
+                currentMapIndex = mapIndex;
+
             }
+            mapIndex++;
         }
     }
     
