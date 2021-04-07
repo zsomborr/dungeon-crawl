@@ -12,8 +12,8 @@ import org.postgresql.ds.PGSimpleDataSource;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GameDatabaseManager {
     private PlayerDao playerDao;
@@ -55,6 +55,16 @@ public class GameDatabaseManager {
             mapDao.add(mapModel, stateId);
             gameLevel++;
         }
+    }
+
+    public int checkIfSaveNameExists(String saveName) {
+        List<GameState> gameStates = gameStateDao.getAll();
+        for (GameState state : gameStates) {
+            if (state.getSaveName().equals(saveName)) {
+                return state.getId();
+            }
+        }
+        return -1;
     }
 
     private DataSource connect() throws SQLException {
