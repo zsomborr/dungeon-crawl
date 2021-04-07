@@ -34,6 +34,12 @@ public class GameDatabaseManager {
         playerDao.add(playerModel);
     }
 
+    public void updatePlayer(Player player, int playerId) {
+        PlayerModel newPlayerModel = new PlayerModel(player);
+        newPlayerModel.setId(playerId);
+        playerDao.update(newPlayerModel);
+    }
+
     public void saveGameState(String saveName) {
         int playerId = playerModel.getId();
         Date savedAt = Util.getCurrentDateAndTime();
@@ -41,24 +47,44 @@ public class GameDatabaseManager {
         gameStateDao.add(gameState);
     }
 
+    public void updateGameState(int gameStateId) {
+        GameState oldGameState = gameStateDao.get(gameStateId);
+        Date savedAt = Util.getCurrentDateAndTime();
+        oldGameState.setSavedAt(savedAt);
+        gameStateDao.update(oldGameState);
+    }
+
     public void saveMaps(List<GameMap> maps, GameMap currentMap) {
         int gameLevel = 1;
         int stateId = gameState.getId();
+
         for (GameMap map : maps) {
             String mapTxt = MapWriter.getMapTxt(map);
             MapModel mapModel;
             if (map.equals(currentMap)) {
-                mapModel = new MapModel(mapTxt, true, gameLevel);
+                mapModel = new MapModel(stateId, mapTxt, true, gameLevel);
             } else {
-                mapModel = new MapModel(mapTxt, false, gameLevel);
+                mapModel = new MapModel(stateId, mapTxt, false, gameLevel);
             }
             mapDao.add(mapModel, stateId);
             gameLevel++;
         }
     }
 
-    public int checkIfSaveNameExists(String saveName) {
+    public void updateMaps(ArrayList<GameMap> maps, GameMap currentMap, int oldGameStateId) {
+        List<MapModel> oldMaps = mapDao.getAll(oldGameStateId);
+
+        for (int i = 0; i < oldMaps.size(); i++) {
+            oldMaps.get(i).setMapLayout(MapWriter.getMapTxt(maps.get(i)));
+            oldMaps.get(i).setCurrentMap(maps.get(i).equals(currentMap));
+
+            mapDao.update(oldMaps.get(i), oldGameStateId);
+        }
+    }
+
+    public GameState checkIfSaveNameExists(String saveName) {
         List<GameState> gameStates = gameStateDao.getAll();
+
         for (GameState state : gameStates) {
             if (state.getSaveName().equals(saveName)) {
                 return state.getId();

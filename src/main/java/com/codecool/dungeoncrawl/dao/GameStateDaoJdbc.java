@@ -19,7 +19,7 @@ public class GameStateDaoJdbc implements GameStateDao {
     public void add(GameState state) {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "INSERT INTO game_state (" +
-                    "save_name," +
+                    "save_name, " +
                     "saved_at, " +
                     "player_id) " +
                     "VALUES (?, ?, ?)";

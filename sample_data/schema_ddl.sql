@@ -35,8 +35,8 @@ CREATE TABLE public.maps
     map_id        integer NOT NULL
 );
 
-DROP TABLE IF EXISTS public.map;
-CREATE TABLE public.map
+DROP TABLE IF EXISTS public.game_map;
+CREATE TABLE public.game_map
 (
     id             serial  NOT NULL PRIMARY KEY,
     map_layout     text    NOT NULL,
@@ -51,4 +51,4 @@ ALTER TABLE ONLY public.maps
     ADD CONSTRAINT fk_game_state_id FOREIGN KEY (game_state_id) REFERENCES public.game_state (id);
 
 ALTER TABLE ONLY public.maps
-    ADD CONSTRAINT fk_map_id FOREIGN KEY (map_id) REFERENCES public.map (id);
+    ADD CONSTRAINT fk_game_map_id FOREIGN KEY (map_id) REFERENCES public.game_map (id);

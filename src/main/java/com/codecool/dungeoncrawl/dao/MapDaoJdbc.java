@@ -4,6 +4,7 @@ import com.codecool.dungeoncrawl.model.MapModel;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapDaoJdbc implements MapDao {
@@ -16,7 +17,7 @@ public class MapDaoJdbc implements MapDao {
     @Override
     public void add(MapModel map, int stateId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO map (" +
+            String sql = "INSERT INTO game_map (" +
                     "map_layout, " +
                     "is_current_map, " +
                     "game_level) " +
@@ -57,7 +58,36 @@ public class MapDaoJdbc implements MapDao {
     }
 
     @Override
-    public List<MapModel> getAll() {
-        return null;
+    public List<MapModel> getAll(int stateId) {
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT " +
+                    "game_map.id, " +
+                    "game_map.map_layout, " +
+                    "game_map.is_current_map, " +
+                    "game_map.game_level " +
+                    "FROM game_map " +
+                    "JOIN maps " +
+                    "ON game_map.id = maps.map_id " +
+                    "WHERE maps.game_state_id = ? ";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, stateId);
+            ResultSet rs = st.executeQuery();
+
+            List<MapModel> result = new ArrayList<>();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+
+                String mapLayout = rs.getString(2);
+                boolean currentMap = rs.getBoolean(3);
+                int gameLevel = rs.getInt(4);
+
+                MapModel mapModel = new MapModel(stateId, mapLayout, currentMap, gameLevel);
+                mapModel.setId(id);
+                result.add(mapModel);
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -12,9 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -63,6 +61,12 @@ public class Main extends Application {
         ui.setPrefWidth(200);
         ui.setPadding(new Insets(10));
         ui.setStyle("-fx-background-color:#472D3C");
+
+        MenuBar menuBar = new MenuBar();
+        Menu menuSave = new Menu("Save");
+        Menu menuLoad = new Menu("Load");
+
+        menuBar.getMenus().addAll(menuSave, menuLoad);
 
         addPickupButton();
         addNameButtonAndTextField();
@@ -269,7 +273,7 @@ public class Main extends Application {
     }
 
     public void displaySave() {
-        Stage popupWindow =new Stage();
+        Stage popupWindow = new Stage();
 
         popupWindow.initModality(Modality.APPLICATION_MODAL);
         popupWindow.setTitle("Save game");
@@ -278,8 +282,6 @@ public class Main extends Application {
         TextField nameField = new TextField();
         Button saveButton = new Button("Save");
         Button cancelButton = new Button("Cancel");
-
-
         nameField.setPrefWidth(10);
 
         saveButton.setOnAction(value -> {
