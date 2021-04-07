@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface MapDao {
     void add(MapModel map, int stateId);
-    void update(MapModel map);
+    void update(MapModel map, int stateId);
     MapModel get(int id);
-    List<MapModel> getAll();
+    List<MapModel> getAll(int stateId);
 }

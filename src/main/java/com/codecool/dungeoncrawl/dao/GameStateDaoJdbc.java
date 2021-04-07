@@ -41,12 +41,44 @@ public class GameStateDaoJdbc implements GameStateDao {
 
     @Override
     public void update(GameState state) {
-
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "UPDATE game_state SET" +
+                    " saved_at = ?" +
+                    "WHERE id = ?";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setDate(1, state.getSavedAt());
+            st.setInt(2, state.getId());
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public GameState get(int id) {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT " +
+                    "save_name, " +
+                    "saved_at, " +
+                    "player_id " +
+                    "FROM game_state WHERE id = ?";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+
+            String saveName = rs.getString(1);
+            Date savedAt = rs.getDate(2);
+            int playerId = rs.getInt(3);
+
+            GameState gameState = new GameState(savedAt, playerId, saveName);
+            gameState.setId(id);
+            return gameState;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

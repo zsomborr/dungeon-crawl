@@ -36,25 +36,61 @@ public class MapDaoJdbc implements MapDao {
         }
     }
 
-    private void connectMapToGameState(Connection conn, int stateId, int mapId) throws SQLException{
-        String sql = "INSERT INTO maps (" +
-                "game_state_id, " +
-                "map_id) " +
-                "VALUES (?, ?)";
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, stateId);
-        statement.setInt(2, mapId);
-        statement.executeUpdate();
-    }
-
     @Override
-    public void update(MapModel map) {
+    public void update(MapModel map, int stateId) {
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "UPDATE game_map SET" +
+                    " map_layout = ?, " +
+                    "is_current_map = ? " +
+                    "FROM maps " +
+                    "WHERE game_map.id = maps.map_id " +
+                    "AND maps.game_state_id = ? " +
+                    "AND game_map.id = ? ";
+            PreparedStatement statement = conn.prepareStatement(sql);
+
+            statement.setString(1, map.getMapLayout());
+            statement.setBoolean(2, map.isCurrentMap());
+            statement.setInt(3, stateId);
+            statement.setInt(4, map.getId());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @Override
     public MapModel get(int id) {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT " +
+                    "game_map.map_layout, " +
+                    "game_map.is_current_map, " +
+                    "game_map.game_level, " +
+                    "maps.game_state_id, " +
+                    "FROM game_map " +
+                    "JOIN maps " +
+                    "ON game_map.id = maps.map_id " +
+                    "WHERE id = ? ";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, id);
+
+            ResultSet rs = st.executeQuery();
+
+            if (!rs.next()) {
+                return null;
+            }
+
+            int gameStateId = rs.getInt(1);
+            String mapLayout = rs.getString(2);
+            boolean currentMap = rs.getBoolean(3);
+            int gameLevel = rs.getInt(4);
+
+            return new MapModel(gameStateId, mapLayout, currentMap, gameLevel);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -89,5 +125,16 @@ public class MapDaoJdbc implements MapDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void connectMapToGameState(Connection conn, int stateId, int mapId) throws SQLException {
+        String sql = "INSERT INTO maps" +
+                "(game_state_id, " +
+                "map_id) " +
+                "VALUES (?, ?) ";
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setInt(1, stateId);
+        statement.setInt(2, mapId);
+        statement.executeUpdate();
     }
 }

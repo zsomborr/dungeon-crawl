@@ -6,6 +6,7 @@ import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.model.GameState;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -74,6 +75,7 @@ public class Main extends Application {
 
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
+        borderPane.setTop(menuBar);
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
@@ -286,27 +288,38 @@ public class Main extends Application {
 
         saveButton.setOnAction(value -> {
             String saveName = nameField.getText();
-            Player player = currentMap.getPlayer();
-
-            dbManager.savePlayer(player);
-            dbManager.saveGameState(saveName);
-            dbManager.saveMaps(maps, currentMap);
+            saveOrUpdateGame(saveName);
             popupWindow.close();
         });
 
         cancelButton.setOnAction(e -> popupWindow.close());
 
-        VBox layout= new VBox(10);
+        VBox layout = new VBox(10);
 
         layout.getChildren().addAll(label1, nameField, saveButton, cancelButton);
         layout.setAlignment(Pos.CENTER);
 
-        Scene scene1= new Scene(layout, 300, 250);
+        Scene scene1 = new Scene(layout, 300, 250);
 
         popupWindow.setScene(scene1);
 
         popupWindow.showAndWait();
+    }
 
+    private void saveOrUpdateGame(String saveName) {
+        Player newPlayer = currentMap.getPlayer();
+        GameState gameState = dbManager.checkIfSaveNameExists(saveName);
+        if (gameState != null) {
+            int oldPlayerId = gameState.getPlayerId();
+            int oldGameStateId = gameState.getId();
+            dbManager.updatePlayer(newPlayer, oldPlayerId);
+            dbManager.updateGameState(oldGameStateId);
+            dbManager.updateMaps(maps, currentMap, oldGameStateId);
+        } else {
+            dbManager.savePlayer(newPlayer);
+            dbManager.saveGameState(saveName);
+            dbManager.saveMaps(maps, currentMap);
+        }
     }
 
     private void changeLabelColor(Label label) {
@@ -338,6 +351,7 @@ public class Main extends Application {
             monster.move();
         }
     }
+
     private void setupDbManager() {
         dbManager = new GameDatabaseManager();
         try {

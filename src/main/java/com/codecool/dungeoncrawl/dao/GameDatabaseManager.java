@@ -12,7 +12,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameDatabaseManager {
@@ -87,10 +87,10 @@ public class GameDatabaseManager {
 
         for (GameState state : gameStates) {
             if (state.getSaveName().equals(saveName)) {
-                return state.getId();
+                return state;
             }
         }
-        return -1;
+        return null;
     }
 
     private DataSource connect() throws SQLException {

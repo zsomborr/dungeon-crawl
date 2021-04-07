@@ -47,7 +47,7 @@ public class PlayerModel extends BaseModel {
         return strength;
     }
 
-    public ArrayList<String> getInventory() {
+    public List<String> getInventory() {
         return inventory;
     }
 

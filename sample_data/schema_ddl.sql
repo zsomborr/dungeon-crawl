@@ -3,7 +3,7 @@ ALTER TABLE IF EXISTS ONLY public.game_state
 ALTER TABLE IF EXISTS ONLY public.maps
     DROP CONSTRAINT IF EXISTS fk_game_state_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.maps
-    DROP CONSTRAINT IF EXISTS fk_map_id CASCADE;
+    DROP CONSTRAINT IF EXISTS fk_game_map_id CASCADE;
 
 DROP TABLE IF EXISTS public.game_state;
 CREATE TABLE public.game_state
