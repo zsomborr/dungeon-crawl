@@ -7,6 +7,7 @@ public abstract class Item implements Drawable {
 
     protected Cell cell;
     protected int stat;
+    protected String tileName;
 
     public int getStat() {
         return stat;
@@ -23,6 +24,8 @@ public abstract class Item implements Drawable {
     public int getY() {
         return cell.getY();
     }
+
+    public String getTileName() {return tileName;}
 
     @Override
     public String toString() {

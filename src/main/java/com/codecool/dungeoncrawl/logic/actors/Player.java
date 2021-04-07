@@ -192,7 +192,6 @@ public class Player extends Actor {
                 nextCell.setActor(null);
             }
         }
-        System.out.println(health);
     }
 
     private void checkIfPoisoned() {

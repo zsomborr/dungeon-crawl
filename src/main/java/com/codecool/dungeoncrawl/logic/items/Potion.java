@@ -8,6 +8,7 @@ public class Potion extends Item {
         this.cell = cell;
         this.cell.setItem(this);
         stat = 5;
+        tileName = "potion";
     }
 
     @Override

@@ -7,10 +7,10 @@ public class Boat extends Item {
     public Boat(Cell cell) {
         this.cell = cell;
         this.cell.setItem(this);
+        tileName = "boat";
     }
 
-    @Override
-    public String getTileName() {
-        return "boat";
+    public Boat(String name) {
+        tileName = name;
     }
 }

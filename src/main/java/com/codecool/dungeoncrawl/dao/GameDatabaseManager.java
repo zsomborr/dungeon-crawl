@@ -93,6 +93,10 @@ public class GameDatabaseManager {
         return null;
     }
 
+    public List<GameState> getAllGameStates() {
+        return gameStateDao.getAll();
+    }
+
     private DataSource connect() throws SQLException {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         String dbName = System.getenv("DB_NAME");

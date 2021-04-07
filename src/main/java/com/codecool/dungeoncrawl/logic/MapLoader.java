@@ -8,10 +8,17 @@ import com.codecool.dungeoncrawl.logic.items.Key;
 
 import java.io.InputStream;
 import java.util.Scanner;
+import org.apache.commons.io.IOUtils;
 
 public class MapLoader {
     public static GameMap loadMap(String mapTxt) {
-        InputStream is = MapLoader.class.getResourceAsStream(mapTxt);
+        InputStream is;
+        if (mapTxt.contains(".txt")) {
+            is = MapLoader.class.getResourceAsStream(mapTxt);
+        }else{
+            is = IOUtils.toInputStream(mapTxt);
+        }
+
         Scanner scanner = new Scanner(is);
         int width = scanner.nextInt();
         int height = scanner.nextInt();

@@ -48,7 +48,7 @@ public class Main extends Application {
     TextField nameTextField = new TextField();
     GridPane ui = new GridPane();
     GameDatabaseManager dbManager;
-
+    MenuBar menuBar = new MenuBar();
 
     public static void main(String[] args) {
         launch(args);
@@ -63,12 +63,7 @@ public class Main extends Application {
         ui.setPadding(new Insets(10));
         ui.setStyle("-fx-background-color:#472D3C");
 
-        MenuBar menuBar = new MenuBar();
-        Menu menuSave = new Menu("Save");
-        Menu menuLoad = new Menu("Load");
-
-        menuBar.getMenus().addAll(menuSave, menuLoad);
-
+        addMenuBar();
         addPickupButton();
         addNameButtonAndTextField();
         createLabels();
@@ -85,6 +80,91 @@ public class Main extends Application {
 
         primaryStage.setTitle("Dungeon Crawl");
         primaryStage.show();
+    }
+
+    private void addMenuBar() {
+        Menu menuSave = new Menu("Save");
+        MenuItem menuItemSave = new MenuItem("Save Game");
+        menuSave.getItems().add(menuItemSave);
+        menuItemSave.setOnAction(t -> displaySave());
+
+        Menu menuLoad = new Menu("Load");
+        addLoadChoices(menuLoad);
+
+        menuBar.getMenus().addAll(menuSave, menuLoad);
+    }
+
+    private void addLoadChoices(Menu menuLoad) {
+        List<GameState> gameStates = dbManager.getAllGameStates();
+        for (GameState gameState : gameStates) {
+            MenuItem menuItem = new MenuItem(gameState.getSaveName());
+            menuLoad.getItems().add(menuItem);
+            menuItem.setOnAction(value -> {
+                loadSavedGame(gameState);
+            });
+        }
+    }
+    
+    private void loadSavedGame(GameState gameState) {
+        int stateId = gameState.getId();
+        int playerId = gameState.getPlayerId();
+        loadMaps(stateId);
+        loadPlayer(playerId);
+        refresh();
+    }
+    
+    private void loadMaps(int stateId) {
+        maps.clear();
+        List<MapModel> mapModels = dbManager.getAllMapsFromStateId(stateId);
+        for (MapModel mapModel : mapModels) {
+            String mapLayout = mapModel.getMapLayout();
+            GameMap map = MapLoader.loadMap(mapLayout);
+            maps.add(map);
+            if (mapModel.isCurrentMap()) {
+                currentMap = map;
+            }
+        }
+    }
+    
+    private void loadPlayer(int playerId) {
+        PlayerModel newPlayerModel = dbManager.getPlayerFromId(playerId);
+        List<String> inventory = newPlayerModel.getInventory();
+        String name = newPlayerModel.getPlayerName();
+        int x = newPlayerModel.getX();
+        int y = newPlayerModel.getY();
+        int hp = newPlayerModel.getHp();
+        int experience = newPlayerModel.getExperience();
+        int strength = newPlayerModel.getStrength();
+        int poisonCount = newPlayerModel.getPoisonCount();
+        Player newPlayer = new Player(currentMap.getCell(x, y));
+        newPlayer.setName(name);
+        newPlayer.setHealth(hp);
+        newPlayer.setExperience(experience);
+        newPlayer.setStrength(strength);
+        newPlayer.setPoisonCount(poisonCount);
+        loadInventory(newPlayer, inventory);
+        currentMap.setPlayer(newPlayer);
+    }
+
+    private void loadInventory(Player newPlayer, List<String> inventory){
+        List<Item> newInventory = new ArrayList<>();
+        for (String itemName : inventory) {
+            switch(itemName) {
+                case "boat":
+                    newInventory.add(new Boat(itemName));
+                    break;
+                case "key":
+                    newInventory.add(new Key(itemName));
+                    break;
+                case "potion":
+                    newInventory.add(new Potion(itemName));
+                    break;
+                case "sword":
+                    newInventory.add(new Sword(itemName));
+                    break;
+            }
+        }
+        newPlayer.setInventory(newInventory);
     }
 
     private void addNameButtonAndTextField() {

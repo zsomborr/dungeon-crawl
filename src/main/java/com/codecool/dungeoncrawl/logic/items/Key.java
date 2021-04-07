@@ -7,10 +7,10 @@ public class Key extends Item {
     public Key(Cell cell) {
         this.cell = cell;
         this.cell.setItem(this);
+        tileName = "key";
     }
 
-    @Override
-    public String getTileName() {
-        return "key";
+    public Key(String name) {
+        this.tileName = name;
     }
 }
