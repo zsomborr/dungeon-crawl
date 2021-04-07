@@ -64,6 +64,18 @@ public class Player extends Actor {
         return onStairsDown;
     }
 
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public void setPoisonCount(int poisonCount) {
+        this.poisonCount = poisonCount;
+    }
+
+    public void setInventory(List<Item> inventory) {
+        this.inventory = inventory;
+    }
+
     public void addToInventory() {
         Item item = super.cell.getItem();
         changePlayerStat(item);

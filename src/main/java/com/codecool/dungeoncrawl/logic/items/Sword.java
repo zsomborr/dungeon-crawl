@@ -9,10 +9,10 @@ public class Sword extends Item {
         this.cell = cell;
         this.cell.setItem(this);
         stat = 2;
+        this.tileName = "sword";
     }
 
-    @Override
-    public String getTileName() {
-        return "sword";
+    public Sword(String name){
+        tileName = name;
     }
 }

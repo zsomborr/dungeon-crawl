@@ -26,19 +26,11 @@ public class MapModel extends BaseModel{
         return gameLevel;
     }
 
-    public void setGameStateId(int gameStateId) {
-        this.gameStateId = gameStateId;
-    }
-
     public void setMapLayout(String mapLayout) {
         this.mapLayout = mapLayout;
     }
 
     public void setCurrentMap(boolean currentMap) {
         this.currentMap = currentMap;
-    }
-
-    public void setGameLevel(int gameLevel) {
-        this.gameLevel = gameLevel;
     }
 }

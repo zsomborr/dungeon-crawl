@@ -11,8 +11,7 @@ public class Potion extends Item {
         tileName = "potion";
     }
 
-    @Override
-    public String getTileName() {
-        return "potion";
+    public Potion(String name) {
+        this.tileName = name;
     }
 }

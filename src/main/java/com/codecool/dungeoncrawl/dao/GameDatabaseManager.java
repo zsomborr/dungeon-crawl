@@ -113,4 +113,12 @@ public class GameDatabaseManager {
 
         return dataSource;
     }
+
+    public List<MapModel> getAllMapsFromStateId(int stateId) {
+        return mapDao.getAll(stateId);
+    }
+
+    public PlayerModel getPlayerFromId(int playerId) {
+        return playerDao.get(playerId);
+    }
 }
