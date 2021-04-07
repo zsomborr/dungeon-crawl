@@ -33,12 +33,6 @@ public class GameStateDaoJdbc implements GameStateDao {
             int stateId = resultSet.getInt(1);
             state.setId(stateId);
 
-            int level = 1;
-            for (String map : state.getDiscoveredMaps()) {
-                int mapId = addMap(conn, map, map.equals(state.getCurrentMap()), level);
-                connectMapToGameState(conn, stateId, mapId);
-                level++;
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -1,6 +1,5 @@
 package com.codecool.dungeoncrawl;
 
-import com.codecool.dungeoncrawl.logic.*;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
@@ -16,7 +15,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -30,8 +28,6 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main extends Application {
     int currentMapIndex;
