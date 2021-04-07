@@ -1,30 +1,28 @@
 package com.codecool.dungeoncrawl;
 
-import com.codecool.dungeoncrawl.logic.Cell;
-import com.codecool.dungeoncrawl.logic.GameMap;
-import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
 import com.codecool.dungeoncrawl.logic.GameMap;
 import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.Player;
+import com.codecool.dungeoncrawl.model.GameState;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -65,12 +63,19 @@ public class Main extends Application {
         ui.setPadding(new Insets(10));
         ui.setStyle("-fx-background-color:#472D3C");
 
+        MenuBar menuBar = new MenuBar();
+        Menu menuSave = new Menu("Save");
+        Menu menuLoad = new Menu("Load");
+
+        menuBar.getMenus().addAll(menuSave, menuLoad);
+
         addPickupButton();
         addNameButtonAndTextField();
         createLabels();
 
         borderPane.setCenter(canvas);
         borderPane.setRight(ui);
+        borderPane.setTop(menuBar);
 
         Scene scene = new Scene(borderPane);
         primaryStage.setScene(scene);
@@ -185,8 +190,7 @@ public class Main extends Application {
                 refresh();
                 break;
             case S:
-                Player player = currentMap.getPlayer();
-                dbManager.savePlayer(player);
+                displaySave();
                 break;
             default:
                 break;
@@ -270,6 +274,54 @@ public class Main extends Application {
         }
     }
 
+    public void displaySave() {
+        Stage popupWindow = new Stage();
+
+        popupWindow.initModality(Modality.APPLICATION_MODAL);
+        popupWindow.setTitle("Save game");
+
+        Label label1 = new Label("Provide a name for your save");
+        TextField nameField = new TextField();
+        Button saveButton = new Button("Save");
+        Button cancelButton = new Button("Cancel");
+        nameField.setPrefWidth(10);
+
+        saveButton.setOnAction(value -> {
+            String saveName = nameField.getText();
+            saveOrUpdateGame(saveName);
+            popupWindow.close();
+        });
+
+        cancelButton.setOnAction(e -> popupWindow.close());
+
+        VBox layout = new VBox(10);
+
+        layout.getChildren().addAll(label1, nameField, saveButton, cancelButton);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene1 = new Scene(layout, 300, 250);
+
+        popupWindow.setScene(scene1);
+
+        popupWindow.showAndWait();
+    }
+
+    private void saveOrUpdateGame(String saveName) {
+        Player newPlayer = currentMap.getPlayer();
+        GameState gameState = dbManager.checkIfSaveNameExists(saveName);
+        if (gameState != null) {
+            int oldPlayerId = gameState.getPlayerId();
+            int oldGameStateId = gameState.getId();
+            dbManager.updatePlayer(newPlayer, oldPlayerId);
+            dbManager.updateGameState(oldGameStateId);
+            dbManager.updateMaps(maps, currentMap, oldGameStateId);
+        } else {
+            dbManager.savePlayer(newPlayer);
+            dbManager.saveGameState(saveName);
+            dbManager.saveMaps(maps, currentMap);
+        }
+    }
+
     private void changeLabelColor(Label label) {
         label.setTextFill(Color.web("white"));
     }
@@ -299,6 +351,7 @@ public class Main extends Application {
             monster.move();
         }
     }
+
     private void setupDbManager() {
         dbManager = new GameDatabaseManager();
         try {
