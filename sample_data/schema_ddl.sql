@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS public.game_state;
 CREATE TABLE public.game_state
 (
     id        serial                                                NOT NULL PRIMARY KEY,
+    save_name text                                                  NOT NULL,
     saved_at  timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     player_id integer                                               NOT NULL
 );
@@ -40,7 +41,7 @@ CREATE TABLE public.map
     id             serial  NOT NULL PRIMARY KEY,
     map_layout     text    NOT NULL,
     is_current_map boolean NOT NULL,
-    game_level          integer NOT NULL
+    game_level     integer NOT NULL
 );
 
 ALTER TABLE ONLY public.game_state

@@ -9,6 +9,7 @@ import com.codecool.dungeoncrawl.logic.MapLoader;
 import com.codecool.dungeoncrawl.logic.actors.Player;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,7 +23,9 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -185,10 +188,7 @@ public class Main extends Application {
                 refresh();
                 break;
             case S:
-                Player player = currentMap.getPlayer();
-                String currentMapTxt = MapWriter.getMapTxt(currentMap);
-                List<String> mapTxts = maps.stream().map(MapWriter::getMapTxt).collect(Collectors.toList());;
-                dbManager.saveGame(player, currentMapTxt, mapTxts);
+                displaySave();
                 break;
             default:
                 break;
@@ -270,6 +270,46 @@ public class Main extends Application {
         } else {
             healthLabel.setTextFill(Color.web("white"));
         }
+    }
+
+    public void displaySave() {
+        Stage popupWindow =new Stage();
+
+        popupWindow.initModality(Modality.APPLICATION_MODAL);
+        popupWindow.setTitle("Save game");
+
+        Label label1 = new Label("Provide a name for your save");
+        TextField nameField = new TextField();
+        Button saveButton = new Button("Save");
+        Button cancelButton = new Button("Cancel");
+
+
+        nameField.setPrefWidth(10);
+
+        saveButton.setOnAction(value -> {
+            String saveName = nameField.getText();
+            Player player = currentMap.getPlayer();
+
+            dbManager.savePlayer(player);
+            dbManager.saveGameState(saveName);
+            dbManager.saveMaps(maps, currentMap);
+            popupWindow.close();
+        });
+
+        cancelButton.setOnAction(e -> popupWindow.close());
+
+        VBox layout= new VBox(10);
+
+        layout.getChildren().addAll(label1, nameField, saveButton, cancelButton);
+
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene1= new Scene(layout, 300, 250);
+
+        popupWindow.setScene(scene1);
+
+        popupWindow.showAndWait();
+
     }
 
     private void changeLabelColor(Label label) {

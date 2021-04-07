@@ -9,11 +9,14 @@ public class GameState extends BaseModel {
     private List<String> discoveredMaps;
     private PlayerModel player;
 
-    public GameState(String currentMap, Date savedAt, PlayerModel player, List<String> otherMaps) {
-        this.currentMap = currentMap;
+    public GameState(Date savedAt, int playerId, String saveName) {
+        this.saveName = saveName;
         this.savedAt = savedAt;
-        this.player = player;
-        this.discoveredMaps = otherMaps;
+        this.playerId = playerId;
+    }
+
+    public String getSaveName() {
+        return saveName;
     }
 
     public Date getSavedAt() {
