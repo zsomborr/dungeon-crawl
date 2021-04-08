@@ -32,7 +32,6 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main extends Application {
     int currentMapIndex;
@@ -402,6 +401,7 @@ public class Main extends Application {
     }
 
     private void saveOrUpdateGame(String saveName) {
+        newPlayer = currentMap.getPlayer();
         this.gameState = dbManager.checkIfSaveNameExists(saveName);
         if (this.gameState != null) {
             displayConfirmSave();
