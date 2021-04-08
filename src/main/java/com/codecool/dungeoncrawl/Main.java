@@ -92,10 +92,21 @@ public class Main extends Application {
     }
 
     private void addMenuBar() {
+        Menu menuFile = new Menu("File");
+        MenuItem menuItemFileExport = new MenuItem("Export File");
+        MenuItem menuItemFileImport = new MenuItem("Import File");
+        menuFile.getItems().addAll(menuItemFileExport, menuItemFileImport);
+
         Menu menuSave = new Menu("Save");
         MenuItem menuItemSave = new MenuItem("Save Game");
         menuSave.getItems().add(menuItemSave);
+
         menuItemSave.setOnAction(t -> displaySave());
+
+        menuItemFileExport.setOnAction(t -> {/*save function into JSON*/});
+        //TODO
+        menuItemFileImport.setOnAction(t -> {/*import function from JSON*/});
+
 
         addLoadChoices(menuLoad);
 
