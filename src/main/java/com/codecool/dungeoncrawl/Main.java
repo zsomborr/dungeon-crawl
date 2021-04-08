@@ -412,41 +412,41 @@ public class Main extends Application {
         }
     }
 
-    private void UpdateGame(){
-        int oldPlayerId = this.gameState.getPlayerId();
-        int oldGameStateId = this.gameState.getId();
-        dbManager.updatePlayer(newPlayer, oldPlayerId);
-        dbManager.updateGameState(oldGameStateId);
-        dbManager.updateMaps(maps, currentMap, oldGameStateId);
-    }
-
     private void displayConfirmSave() {
         Stage confirmWindow = new Stage();
 
         confirmWindow.initModality(Modality.APPLICATION_MODAL);
         confirmWindow.setTitle("Confirmation");
 
-        Label label1 = new Label("This name is already used, \n do You want to override it?");
+        Label label1 = new Label("Would you like to overwrite \n the already existing state?");
         Button yesButton = new Button("Yes");
-        Button cancelButton = new Button("Cancel");
+        Button noButton = new Button("No");
 
         yesButton.setOnAction(value -> {
             UpdateGame();
             confirmWindow.close();
         });
 
-        cancelButton.setOnAction(e -> confirmWindow.close());
+        noButton.setOnAction(e -> confirmWindow.close());
 
         VBox layout = new VBox(10);
 
         layout.getChildren().addAll(label1, yesButton, cancelButton);
         layout.setAlignment(Pos.CENTER);
 
-        Scene scene1 = new Scene(layout, 300, 250);
+        Scene scene1 = new Scene(layout, 250, 200);
 
         confirmWindow.setScene(scene1);
 
         confirmWindow.showAndWait();
+    }
+
+    private void UpdateGame(){
+        int oldPlayerId = this.gameState.getPlayerId();
+        int oldGameStateId = this.gameState.getId();
+        dbManager.updatePlayer(newPlayer, oldPlayerId);
+        dbManager.updateGameState(oldGameStateId);
+        dbManager.updateMaps(maps, currentMap, oldGameStateId);
     }
 
     private void changeLabelColor(Label label) {
