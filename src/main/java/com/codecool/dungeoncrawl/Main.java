@@ -426,7 +426,7 @@ public class Main extends Application {
         confirmWindow.initModality(Modality.APPLICATION_MODAL);
         confirmWindow.setTitle("Confirmation");
 
-        Label label1 = new Label("This name is already used, do You want to override the save?");
+        Label label1 = new Label("This name is already used, \n do You want to override it?");
         Button yesButton = new Button("Yes");
         Button cancelButton = new Button("Cancel");
 
