@@ -12,10 +12,8 @@ public class GameMap {
     private int width;
     private int height;
     private Cell[][] cells;
-
     private Player player;
     private List<Actor> monsters;
-
     private Cell stairUp;
     private Cell stairDown;
     private Actor boss;

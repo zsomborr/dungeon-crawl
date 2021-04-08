@@ -222,4 +222,8 @@ public class Player extends Actor {
             onItem = true;
         }
     }
+
+    public List<Item> getInventory() {
+        return inventory;
+    }
 }

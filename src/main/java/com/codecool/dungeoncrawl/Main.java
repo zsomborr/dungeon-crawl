@@ -1,5 +1,7 @@
 package com.codecool.dungeoncrawl;
 
+import com.codecool.dungeoncrawl.ie.IEFile;
+import com.codecool.dungeoncrawl.logic.MapWriter;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
@@ -10,6 +12,8 @@ import com.codecool.dungeoncrawl.logic.items.*;
 import com.codecool.dungeoncrawl.model.GameState;
 import com.codecool.dungeoncrawl.model.MapModel;
 import com.codecool.dungeoncrawl.model.PlayerModel;
+import com.codecool.dungeoncrawl.util.Util;
+import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,10 +29,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.sql.SQLException;
 import java.util.List;
@@ -64,7 +76,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         setupDbManager();
         createMaps();
         currentMap = maps.get(currentMapIndex);
@@ -92,14 +104,132 @@ public class Main extends Application {
     }
 
     private void addMenuBar() {
+        Menu menuFile = new Menu("File");
+        MenuItem menuItemFileExport = new MenuItem("Export File");
+        MenuItem menuItemFileImport = new MenuItem("Import File");
+        menuFile.getItems().addAll(menuItemFileExport, menuItemFileImport);
+
         Menu menuSave = new Menu("Save");
         MenuItem menuItemSave = new MenuItem("Save Game");
         menuSave.getItems().add(menuItemSave);
+
         menuItemSave.setOnAction(t -> displaySave());
+
+        menuItemFileExport.setOnAction(t -> confirmExport());
+        menuItemFileImport.setOnAction(t -> confirmImport());
+
 
         addLoadChoices(menuLoad);
 
-        menuBar.getMenus().addAll(menuSave, menuLoad);
+        menuBar.getMenus().addAll(menuSave, menuLoad, menuFile);
+    }
+
+    private void confirmExport() {
+        Stage exportWindow = new Stage();
+
+        exportWindow.initModality(Modality.APPLICATION_MODAL);
+        exportWindow.setTitle("Confirmation");
+        Label label = new Label("Type your name here for your save file: ");
+        Button cancelButton = new Button("Cancel");
+
+        TextField fileName = new TextField();
+
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        Button selectButton = new Button("Select directory for the save!");
+
+        selectButton.setOnAction((t) -> {
+            File selectedDirectory = directoryChooser.showDialog(exportWindow);
+            if (selectedDirectory != null) {
+                GsonSerialization(selectedDirectory.getAbsolutePath() +
+                        "/" +
+                        fileName.getText() +
+                        ".json");
+            }
+            exportWindow.close();
+        });
+
+        cancelButton.setOnAction(e -> exportWindow.close());
+
+        VBox vBox = new VBox(label, fileName, selectButton, cancelButton);
+        Scene scene = new Scene(vBox, 100, 100);
+
+        exportWindow.setScene(scene);
+        exportWindow.show();
+    }
+
+    private void confirmImport() {
+        Stage importWindow = new Stage();
+
+        importWindow.initModality(Modality.APPLICATION_MODAL);
+        importWindow.setTitle("Confirmation");
+        Label label = new Label("Choose a target file");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        Button selectButton = new Button("Select File");
+        Button cancelButton = new Button("Cancel");
+
+        selectButton.setOnAction((t) -> {
+            File file = fileChooser.showOpenDialog(importWindow);
+            if (file != null) {
+                String cwd = System.getProperty("user.dir");
+                GsonDeserialization(new File(cwd).toURI().relativize(file.toURI()).getPath());
+                importWindow.close();
+            }
+        });
+
+        cancelButton.setOnAction(e -> importWindow.close());
+
+        VBox vBox = new VBox(label, selectButton, cancelButton);
+        Scene scene = new Scene(vBox, 100, 100);
+
+        importWindow.setScene(scene);
+        importWindow.show();
+    }
+
+    private void GsonSerialization(String path) {
+        try(FileWriter file = new FileWriter(path)){
+
+            PlayerModel playerModel = new PlayerModel(currentMap.getPlayer());
+            List<MapModel> mapModels = new ArrayList<>();
+
+            int gameLevel = 1;
+            for (GameMap map : maps) {
+                String mapTxt = MapWriter.getMapTxt(map);
+                MapModel mapModel;
+                if (map.equals(currentMap)) {
+                    mapModel = new MapModel(-1, mapTxt, true, gameLevel);
+                } else {
+                    mapModel = new MapModel(-1, mapTxt, false, gameLevel);
+                }
+                mapModels.add(mapModel);
+                gameLevel++;
+            }
+            Date savedAt = Util.getCurrentDateAndTime();
+            IEFile exportFile = new IEFile(savedAt, playerModel, mapModels);
+            String jsonExportGame = new Gson().toJson(exportFile);
+            file.write(jsonExportGame);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void GsonDeserialization(String file) {
+//        String file = "src/main/resources/test.json";
+        try {
+            String jsonImportGame = new String(Files.readAllBytes(Paths.get(file)));
+            IEFile importFile = new Gson().fromJson(jsonImportGame, IEFile.class);
+
+            PlayerModel playerModel = importFile.getPlayer();
+            List<MapModel> mapModels = importFile.getMapModels();
+
+            loadMaps(mapModels);
+            loadPlayer(playerModel);
+            refresh();
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("import fail");
+        }
     }
 
     private void addLoadChoices(Menu menuLoad) {
@@ -113,18 +243,19 @@ public class Main extends Application {
             });
         }
     }
-    
+
     private void loadSavedGame(GameState gameState) {
         int stateId = gameState.getId();
         int playerId = gameState.getPlayerId();
-        loadMaps(stateId);
-        loadPlayer(playerId);
+        List<MapModel> mapModels = dbManager.getAllMapsFromStateId(stateId);
+        PlayerModel newPlayerModel = dbManager.getPlayerFromId(playerId);
+        loadMaps(mapModels);
+        loadPlayer(newPlayerModel);
         refresh();
     }
-    
-    private void loadMaps(int stateId) {
+
+    private void loadMaps(List<MapModel> mapModels) {
         maps.clear();
-        List<MapModel> mapModels = dbManager.getAllMapsFromStateId(stateId);
         int mapIndex = 0;
         for (MapModel mapModel : mapModels) {
             String mapLayout = mapModel.getMapLayout();
@@ -138,9 +269,8 @@ public class Main extends Application {
             mapIndex++;
         }
     }
-    
-    private void loadPlayer(int playerId) {
-        PlayerModel newPlayerModel = dbManager.getPlayerFromId(playerId);
+
+    private void loadPlayer(PlayerModel newPlayerModel) {
         List<String> inventory = newPlayerModel.getInventory();
         String name = newPlayerModel.getPlayerName();
         int x = newPlayerModel.getX();
@@ -426,7 +556,6 @@ public class Main extends Application {
             confirmWindow.close();
             popupWindow.close();
         });
-
         noButton.setOnAction(e -> confirmWindow.close());
 
         VBox layout = new VBox(10);
@@ -437,7 +566,6 @@ public class Main extends Application {
         Scene scene1 = new Scene(layout, 250, 200);
 
         confirmWindow.setScene(scene1);
-
         confirmWindow.showAndWait();
     }
 
