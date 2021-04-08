@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main extends Application {
     int currentMapIndex;
@@ -54,6 +55,9 @@ public class Main extends Application {
     GridPane ui = new GridPane();
     GameDatabaseManager dbManager;
     MenuBar menuBar = new MenuBar();
+    Menu menuLoad;
+    Player newPlayer;
+    GameState gameState;
 
     public static void main(String[] args) {
         launch(args);
@@ -93,13 +97,14 @@ public class Main extends Application {
         menuSave.getItems().add(menuItemSave);
         menuItemSave.setOnAction(t -> displaySave());
 
-        Menu menuLoad = new Menu("Load");
+        menuLoad = new Menu("Load");
         addLoadChoices(menuLoad);
 
         menuBar.getMenus().addAll(menuSave, menuLoad);
     }
 
     private void addLoadChoices(Menu menuLoad) {
+        menuLoad.getItems().clear();
         List<GameState> gameStates = dbManager.getAllGameStates();
         for (GameState gameState : gameStates) {
             MenuItem menuItem = new MenuItem(gameState.getSaveName());
@@ -146,7 +151,7 @@ public class Main extends Application {
         int experience = newPlayerModel.getExperience();
         int strength = newPlayerModel.getStrength();
         int poisonCount = newPlayerModel.getPoisonCount();
-        Player newPlayer = new Player(currentMap.getCell(x, y));
+        newPlayer = new Player(currentMap.getCell(x, y));
         newPlayer.setName(name);
         newPlayer.setHealth(hp);
         newPlayer.setExperience(experience);
@@ -380,6 +385,7 @@ public class Main extends Application {
             String saveName = nameField.getText();
             saveOrUpdateGame(saveName);
             popupWindow.close();
+            addLoadChoices(menuLoad);
         });
 
         cancelButton.setOnAction(e -> popupWindow.close());
@@ -397,19 +403,51 @@ public class Main extends Application {
     }
 
     private void saveOrUpdateGame(String saveName) {
-        Player newPlayer = currentMap.getPlayer();
-        GameState gameState = dbManager.checkIfSaveNameExists(saveName);
-        if (gameState != null) {
-            int oldPlayerId = gameState.getPlayerId();
-            int oldGameStateId = gameState.getId();
-            dbManager.updatePlayer(newPlayer, oldPlayerId);
-            dbManager.updateGameState(oldGameStateId);
-            dbManager.updateMaps(maps, currentMap, oldGameStateId);
+        this.gameState = dbManager.checkIfSaveNameExists(saveName);
+        if (this.gameState != null) {
+            displayConfirmSave();
         } else {
             dbManager.savePlayer(newPlayer);
             dbManager.saveGameState(saveName);
             dbManager.saveMaps(maps, currentMap);
         }
+    }
+
+    private void UpdateGame(){
+        int oldPlayerId = this.gameState.getPlayerId();
+        int oldGameStateId = this.gameState.getId();
+        dbManager.updatePlayer(newPlayer, oldPlayerId);
+        dbManager.updateGameState(oldGameStateId);
+        dbManager.updateMaps(maps, currentMap, oldGameStateId);
+    }
+
+    private void displayConfirmSave() {
+        Stage confirmWindow = new Stage();
+
+        confirmWindow.initModality(Modality.APPLICATION_MODAL);
+        confirmWindow.setTitle("Confirmation");
+
+        Label label1 = new Label("This name is already used, do You want to override the save?");
+        Button yesButton = new Button("Yes");
+        Button cancelButton = new Button("Cancel");
+
+        yesButton.setOnAction(value -> {
+            UpdateGame();
+            confirmWindow.close();
+        });
+
+        cancelButton.setOnAction(e -> confirmWindow.close());
+
+        VBox layout = new VBox(10);
+
+        layout.getChildren().addAll(label1, yesButton, cancelButton);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene1 = new Scene(layout, 300, 250);
+
+        confirmWindow.setScene(scene1);
+
+        confirmWindow.showAndWait();
     }
 
     private void changeLabelColor(Label label) {
