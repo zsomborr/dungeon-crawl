@@ -124,7 +124,6 @@ public class Main extends Application {
     }
     
     private void loadMaps(int stateId) {
-        // must run after every save to update load options
         maps.clear();
         List<MapModel> mapModels = dbManager.getAllMapsFromStateId(stateId);
         int mapIndex = 0;
@@ -157,11 +156,11 @@ public class Main extends Application {
         newPlayer.setExperience(experience);
         newPlayer.setStrength(strength);
         newPlayer.setPoisonCount(poisonCount);
-        loadInventory(newPlayer, inventory);
+        loadInventory(inventory);
         currentMap.setPlayer(newPlayer);
     }
 
-    private void loadInventory(Player newPlayer, List<String> inventory){
+    private void loadInventory(List<String> inventory){
         List<Item> newInventory = new ArrayList<>();
         for (String itemName : inventory) {
             switch(itemName) {
