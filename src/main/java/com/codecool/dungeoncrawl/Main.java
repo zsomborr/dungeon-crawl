@@ -1,5 +1,7 @@
 package com.codecool.dungeoncrawl;
 
+import com.codecool.dungeoncrawl.ie.IEFile;
+import com.codecool.dungeoncrawl.logic.MapWriter;
 import com.codecool.dungeoncrawl.logic.actors.Actor;
 import com.codecool.dungeoncrawl.dao.GameDatabaseManager;
 import com.codecool.dungeoncrawl.logic.Cell;
@@ -64,7 +66,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         setupDbManager();
         createMaps();
         currentMap = maps.get(currentMapIndex);
@@ -128,14 +130,15 @@ public class Main extends Application {
     private void loadSavedGame(GameState gameState) {
         int stateId = gameState.getId();
         int playerId = gameState.getPlayerId();
-        loadMaps(stateId);
-        loadPlayer(playerId);
+        List<MapModel> mapModels = dbManager.getAllMapsFromStateId(stateId);
+        PlayerModel newPlayerModel = dbManager.getPlayerFromId(playerId);
+        loadMaps(mapModels);
+        loadPlayer(newPlayerModel);
         refresh();
     }
-    
-    private void loadMaps(int stateId) {
+
+    private void loadMaps(List<MapModel> mapModels) {
         maps.clear();
-        List<MapModel> mapModels = dbManager.getAllMapsFromStateId(stateId);
         int mapIndex = 0;
         for (MapModel mapModel : mapModels) {
             String mapLayout = mapModel.getMapLayout();
@@ -149,9 +152,8 @@ public class Main extends Application {
             mapIndex++;
         }
     }
-    
-    private void loadPlayer(int playerId) {
-        PlayerModel newPlayerModel = dbManager.getPlayerFromId(playerId);
+
+    private void loadPlayer(PlayerModel newPlayerModel) {
         List<String> inventory = newPlayerModel.getInventory();
         String name = newPlayerModel.getPlayerName();
         int x = newPlayerModel.getX();
