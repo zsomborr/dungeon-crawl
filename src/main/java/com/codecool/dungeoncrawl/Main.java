@@ -151,7 +151,7 @@ public class Main extends Application {
         cancelButton.setOnAction(e -> exportWindow.close());
 
         VBox vBox = new VBox(label, fileName, selectButton, cancelButton);
-        Scene scene = new Scene(vBox, 100, 100);
+        Scene scene = new Scene(vBox, 300, 100);
 
         exportWindow.setScene(scene);
         exportWindow.show();
@@ -180,7 +180,7 @@ public class Main extends Application {
         cancelButton.setOnAction(e -> importWindow.close());
 
         VBox vBox = new VBox(label, selectButton, cancelButton);
-        Scene scene = new Scene(vBox, 100, 100);
+        Scene scene = new Scene(vBox, 150, 80);
 
         importWindow.setScene(scene);
         importWindow.show();
@@ -215,7 +215,6 @@ public class Main extends Application {
     }
 
     private void GsonDeserialization(String file) {
-//        String file = "src/main/resources/test.json";
         try {
             String jsonImportGame = new String(Files.readAllBytes(Paths.get(file)));
             IEFile importFile = new Gson().fromJson(jsonImportGame, IEFile.class);
