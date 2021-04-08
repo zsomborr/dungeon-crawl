@@ -54,7 +54,8 @@ public class Main extends Application {
     GridPane ui = new GridPane();
     GameDatabaseManager dbManager;
     MenuBar menuBar = new MenuBar();
-    Menu menuLoad;
+    Stage popupWindow;
+    Menu menuLoad = new Menu("Load");
     Player newPlayer;
     GameState gameState;
 
@@ -96,7 +97,6 @@ public class Main extends Application {
         menuSave.getItems().add(menuItemSave);
         menuItemSave.setOnAction(t -> displaySave());
 
-        menuLoad = new Menu("Load");
         addLoadChoices(menuLoad);
 
         menuBar.getMenus().addAll(menuSave, menuLoad);
@@ -368,8 +368,7 @@ public class Main extends Application {
     }
 
     public void displaySave() {
-        Stage popupWindow = new Stage();
-
+        popupWindow = new Stage();
         popupWindow.initModality(Modality.APPLICATION_MODAL);
         popupWindow.setTitle("Save game");
 
@@ -382,8 +381,6 @@ public class Main extends Application {
         saveButton.setOnAction(value -> {
             String saveName = nameField.getText();
             saveOrUpdateGame(saveName);
-            popupWindow.close();
-            addLoadChoices(menuLoad);
         });
 
         cancelButton.setOnAction(e -> popupWindow.close());
@@ -409,6 +406,8 @@ public class Main extends Application {
             dbManager.savePlayer(newPlayer);
             dbManager.saveGameState(saveName);
             dbManager.saveMaps(maps, currentMap);
+            popupWindow.close();
+            addLoadChoices(menuLoad);
         }
     }
 
@@ -425,13 +424,14 @@ public class Main extends Application {
         yesButton.setOnAction(value -> {
             UpdateGame();
             confirmWindow.close();
+            popupWindow.close();
         });
 
         noButton.setOnAction(e -> confirmWindow.close());
 
         VBox layout = new VBox(10);
 
-        layout.getChildren().addAll(label1, yesButton, cancelButton);
+        layout.getChildren().addAll(label1, yesButton, noButton);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene1 = new Scene(layout, 250, 200);
