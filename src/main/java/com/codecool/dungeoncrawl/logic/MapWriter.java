@@ -25,6 +25,9 @@ public class MapWriter {
                     case CLOSED_DOOR:
                         mapTxt.append('d');
                         break;
+                    case OPEN_DOOR:
+                        mapTxt.append('D');
+                        break;
                     case STAIRS_DOWN:
                         mapTxt.append('b');
                         break;

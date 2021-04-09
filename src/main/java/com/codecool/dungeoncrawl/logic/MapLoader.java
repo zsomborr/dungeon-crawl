@@ -82,6 +82,9 @@ public class MapLoader {
                         case 'd':
                             cell.setType(CellType.CLOSED_DOOR);
                             break;
+                        case 'D':
+                            cell.setType(CellType.OPEN_DOOR);
+                            break;
                         case 'b':
                             cell.setType(CellType.STAIRS_DOWN);
                             map.setStairDown(cell);
